@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @Entity
@@ -28,8 +30,27 @@ public class User {
     @Column(nullable = false, length = 45,name="password")
     private String password;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
+
+
+    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},
+                          fetch=FetchType.LAZY)
+    @JoinTable(name="user_credit_card",schema = "public",joinColumns = @JoinColumn(name="user_id"),inverseJoinColumns = @JoinColumn(name="credit_card_id"))
+    private List<CreditCard> creditCards;
+
+
+    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},
+            fetch=FetchType.LAZY)
+    @JoinTable(name="user_address",schema = "public",joinColumns = @JoinColumn(name="user_id"),inverseJoinColumns = @JoinColumn(name="address_id"))
+    private List<Address> addresses;
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
+    private List<Review> reviews ;
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
+    private List<Order> orders ;
+
 }
 

@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
 import java.time.Instant;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -27,10 +28,19 @@ public class Order {
     @JoinColumn(name = "adress_id", nullable = false)
     private Address address;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(nullable = false,name="amount")
     private Double amount;
+
+    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},
+            fetch=FetchType.LAZY)
+    @JoinTable(name="product_order",schema = "public",joinColumns = @JoinColumn(name="order_id"),inverseJoinColumns = @JoinColumn(name="product_id"))
+    private List<Product> products;
+
+    @OneToOne(cascade=CascadeType.ALL,mappedBy = "order")
+    private Payment payment;
+
 }

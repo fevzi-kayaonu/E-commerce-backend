@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @Entity
@@ -30,4 +32,10 @@ public class CreditCard {
 
     @Column(nullable = false,name="ccv")
     private Integer ccv;
+
+    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},
+            fetch=FetchType.LAZY)
+    @JoinTable(name="user_credit_card",schema = "public",joinColumns = @JoinColumn(name="credit_card_id"),inverseJoinColumns = @JoinColumn(name="user_id"))
+    private List<User> users;
+
 }

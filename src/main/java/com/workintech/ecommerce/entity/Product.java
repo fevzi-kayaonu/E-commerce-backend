@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -40,7 +42,18 @@ public class Product {
     @Temporal(TemporalType.TIMESTAMP)
     private Instant createdAt = Instant.now();
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
+    private Category category; // ManyToMany de proje run edildiğinde component direk oluşturuluyor, oneTomany de neden oluşturulmuyor Lazy olarak bırakıyoruz ?
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "product")
+    private List<Image> images ; // bunları hep List olarak tutuyorum Set olarak mı tutmalıyım , ayrımı nedir. JpaRepositorydeki metodlarda List döndürüyuor
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "product")
+    private List<Review> reviews ;
+
+    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},
+            fetch=FetchType.LAZY)
+    @JoinTable(name="product_order",schema = "public",joinColumns = @JoinColumn(name="product_id"),inverseJoinColumns = @JoinColumn(name="order_id"))
+    private List<Order> orders;
 }

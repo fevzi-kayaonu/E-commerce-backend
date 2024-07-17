@@ -19,9 +19,10 @@ public class Review {
     @Column(nullable = false)
     private String message;
 
-    @ManyToOne
+    @ManyToOne(cascade= {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)

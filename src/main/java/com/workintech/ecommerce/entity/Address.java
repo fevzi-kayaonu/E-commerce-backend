@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @Entity
@@ -32,4 +34,10 @@ public class Address {
 
     @Column(nullable = false,name= "postal_code")
     private Integer postalCode;
+
+    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},
+            fetch=FetchType.LAZY)
+    @JoinTable(name="user_address",schema = "public",joinColumns = @JoinColumn(name="address_id"),inverseJoinColumns = @JoinColumn(name="user_id"))
+    private List<User> users;
+
 }

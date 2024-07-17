@@ -27,11 +27,12 @@ public class Payment {
     @Column(nullable = false,name="amount")
     private Double amount;
 
-    @OneToOne
+    @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "order_id", nullable = false, unique = true)
     private Order order;
 
     @ManyToOne
     @JoinColumn(name = "credit_card_id")
     private CreditCard creditCard;
+
 }

@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @Entity
@@ -22,4 +24,7 @@ public class Category {
 
     @Column(nullable = false,name="description")
     private String description;
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "category")
+    private List<Product> products ;
 }
