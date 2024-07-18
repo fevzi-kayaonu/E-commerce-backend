@@ -30,17 +30,20 @@ public class CategoryServiceImpl implements  CategoryService{
         return categoryRepository.findById(id).orElseThrow(null) ;
     }
 
-    @Transactional
     @Override
     public Category save(Category category) {
         return categoryRepository.save(category);
     }
 
-    @Transactional
     @Override
     public Category delete(Long id) {
         Category category = findById(id);
         categoryRepository.delete(category);
         return category;
+    }
+
+    @Override
+    public Category getByName(String name) {
+        return categoryRepository.getByName(name);
     }
 }

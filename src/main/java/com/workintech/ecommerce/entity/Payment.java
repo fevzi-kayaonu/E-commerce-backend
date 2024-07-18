@@ -17,8 +17,13 @@ public class Payment {
     @Column(name="id")
     private Long id;
 
-    @Column(nullable = false, length = 45,name="method")
-    private String method;
+    @Column(nullable = false, length = 20,name="method")
+    @Enumerated(EnumType.STRING)
+    private Enum_PaymentMethod method;
+
+    @Column(nullable = false, length = 20,name="status")
+    @Enumerated(EnumType.STRING)
+    private Enum_PaymentStatus status;
 
     @Column(nullable = false,name="date")
     @Temporal(TemporalType.TIMESTAMP)

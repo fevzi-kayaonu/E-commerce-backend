@@ -1,4 +1,27 @@
 package com.workintech.ecommerce.dto;
 
-public record ProductResponse() {
+import com.workintech.ecommerce.entity.Enum_Gender;
+
+import java.time.Instant;
+import java.util.List;
+
+public record ProductResponse(
+        Long id,
+
+        String name,
+
+        String description,
+
+        Double price,
+
+        Double rating,
+
+        Integer stockQuantity,
+
+        Enum_Gender gender,
+
+        Instant createdAt,
+        CategoryResponseDto categoryResponseDto,
+        List<ImageRequestDto> imageRequestDtos
+) {
 }

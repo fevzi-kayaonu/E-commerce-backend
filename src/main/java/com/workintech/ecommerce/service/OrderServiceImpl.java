@@ -27,23 +27,14 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order findById(Long id) {
-        /*
-        Optional<Address> address = addressRepository.findById(id);
-        if(address.isPresent()){
-            return address.get();
-        }
-        */
         return orderRepository.findById(id).orElseThrow(null) ;
     }
 
-    @Transactional
     @Override
     public Order save(Order order) {
         return orderRepository.save(order);
     }
 
-    // buna koymaya gerek var mı sonuçta dml
-    @Transactional
     @Override
     public Order delete(Long id) {
         Order order = findById(id);

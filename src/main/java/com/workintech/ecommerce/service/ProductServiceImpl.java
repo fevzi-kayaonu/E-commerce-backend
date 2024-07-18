@@ -1,7 +1,7 @@
 package com.workintech.ecommerce.service;
 
+
 import org.springframework.data.domain.Sort;
-import com.workintech.ecommerce.entity.Enum_Category;
 import com.workintech.ecommerce.entity.Product;
 import com.workintech.ecommerce.repository.ProductRepository;
 import jakarta.transaction.Transactional;
@@ -12,8 +12,9 @@ import java.util.List;
 
 @Service
 public class ProductServiceImpl implements ProductService{
-
+    //Bir servise birden fazla reposiroty inject edersem yan eksisi olur mu , (daha fazla repository eklersem daha basit jpql lerle işleri çözebiliyorum)
     private final ProductRepository productRepository;
+
 
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository) {
@@ -31,14 +32,13 @@ public class ProductServiceImpl implements ProductService{
         return productRepository.findById(id).orElseThrow(null) ;
     }
 
-    @Transactional
+
     @Override
     public Product save(Product product) {
         return productRepository.save(product);
     }
 
 
-    @Transactional
     @Override
     public Product delete(Long id) {
         Product product = findById(id);
@@ -46,8 +46,7 @@ public class ProductServiceImpl implements ProductService{
         return product;
     }
 
-
-
+    @Override
     public List<Product> getPriceDesc() {
         /* Bu algoritmaları jpql ile mi yapmak doğru olur ya da bu şekilde mi daha doğru olur
         return findAll().stream()
@@ -71,8 +70,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<Product> getByCategory(Enum_Category category) {
-        Long categoryId = category.getCategoryId();
-        return productRepository.getByCategory(categoryId);
+    public List<Product> getByCategory(String name) {
+        return productRepository.getByCategory(name);
     }
 }

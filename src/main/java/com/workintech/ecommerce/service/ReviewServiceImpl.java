@@ -30,13 +30,11 @@ public class ReviewServiceImpl implements ReviewService{
         return reviewRepository.findById(id).orElseThrow(null) ;
     }
 
-    @Transactional
     @Override
     public Review save(Review review) {
         return reviewRepository.save(review);
     }
 
-    @Transactional
     @Override
     public Review delete(Long id) {
         Review review = findById(id);

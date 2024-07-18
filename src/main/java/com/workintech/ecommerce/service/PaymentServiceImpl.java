@@ -26,23 +26,16 @@ public class PaymentServiceImpl implements PaymentService{
 
     @Override
     public Payment findById(Long id) {
-        /*
-        Optional<Address> address = addressRepository.findById(id);
-        if(address.isPresent()){
-            return address.get();
-        }
-        */
         return paymentRepository.findById(id).orElseThrow(null) ;
     }
 
-    @Transactional
     @Override
     public Payment save(Payment payment) {
         return paymentRepository.save(payment);
     }
 
-    // buna koymaya gerek var mı sonuçta dml
-    @Transactional
+    //(dml)
+    // buna koymaya gerek var mıl
     @Override
     public Payment delete(Long id) {
         Payment payment = findById(id);

@@ -1,4 +1,28 @@
 package com.workintech.ecommerce.dto;
 
-public record AddressDto() {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
+
+public record AddressDto(
+        @NotBlank(message = "Description cannot be blank")
+        String description,
+
+        @NotBlank(message = "Street cannot be blank")
+        String street,
+
+        @NotBlank(message = "Neighborhood cannot be blank")
+        String neighborhood,
+
+        @NotBlank(message = "District cannot be blank")
+        String district,
+
+        @NotBlank(message = "City cannot be blank")
+        String city,
+
+        @NotBlank(message = "Postal code  be blank")
+        @Size(min = 5, max = 5, message = "Postal code must be exactly 5 digits")
+        String postalCode
+) {
 }
