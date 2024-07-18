@@ -1,6 +1,9 @@
 package com.workintech.ecommerce.service;
 
 
+import org.hibernate.query.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import com.workintech.ecommerce.entity.Product;
 import com.workintech.ecommerce.repository.ProductRepository;
@@ -72,5 +75,17 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public List<Product> getByCategory(String name) {
         return productRepository.getByCategory(name);
+    }
+/*
+    @Override
+    public Page<Product> getByCategoryAndGender(String name, String gender) {
+        Pageable pageable= PageRequest.of(offset, count); // PageRequest oluşturma
+        return productRepository.getByCategoryAndGender(name, gender, pageRequest);
+    }
+*/
+    @Override
+    public List<Product> getProducts(int offset, int count) {
+        Pageable pageable = PageRequest.of(offset, count);
+        return productRepository.findAll(pageable).getContent();
     }
 }

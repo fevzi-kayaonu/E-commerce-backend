@@ -5,7 +5,7 @@ import com.workintech.ecommerce.entity.Enum_Gender;
 import java.time.Instant;
 import java.util.List;
 
-public record ProductResponse(
+public record ProductResponseDto(
         Long id,
 
         String name,
