@@ -3,16 +3,17 @@ package com.workintech.ecommerce.controller;
 
 
 import com.workintech.ecommerce.dto.CategoryResponseDto;
+import com.workintech.ecommerce.dto.OrderRequestDto;
+import com.workintech.ecommerce.dto.OrderResponseDto;
 import com.workintech.ecommerce.dto.ProductResponseDto;
+import com.workintech.ecommerce.entity.Order;
 import com.workintech.ecommerce.entity.Product;
 import com.workintech.ecommerce.service.CategoryService;
 import com.workintech.ecommerce.service.OrderService;
 import com.workintech.ecommerce.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -48,12 +49,22 @@ public class WelcomeController {
     }
   */
 
-    @GetMapping
+    @GetMapping("/")
     public List<ProductResponseDto> getProducts(
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "10") int count) {
         List<Product> products = productService.getProducts(offset, count);
         return  products;
+    }
+
+    @GetMapping("/")
+    List<ProductResponseDto> getByCategoryAndGender( @RequestParam String name,
+                                          @RequestParam String gender,
+                                          @RequestParam(defaultValue = "0")  int offset,
+                                          @RequestParam(defaultValue = "10")  int count){
+
+        List<Product> products = productService.getByCategoryAndGender(name,gender,offset,count);
+        return products;
     }
 
   /*
@@ -63,7 +74,6 @@ public class WelcomeController {
         return categoryService.findAll();
     }
  */
-    //sepete ürün ekleme (id)
 
 
     //ürün search etme (ismine göre)

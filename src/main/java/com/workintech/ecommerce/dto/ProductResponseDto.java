@@ -22,6 +22,6 @@ public record ProductResponseDto(
 
         Instant createdAt,
         CategoryResponseDto categoryResponseDto,
-        List<ImageRequestDto> imageRequestDtos
+        List<ImageResponseDto> imageResponseDtos
 ) {
 }

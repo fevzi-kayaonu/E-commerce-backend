@@ -1,11 +1,11 @@
 package com.workintech.ecommerce.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
-public record AddressDto(
+
+
+public record AddressRequestDto(
         @NotBlank(message = "Description cannot be blank")
         String description,
 

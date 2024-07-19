@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import com.workintech.ecommerce.entity.Product;
 import com.workintech.ecommerce.repository.ProductRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -76,13 +75,14 @@ public class ProductServiceImpl implements ProductService{
     public List<Product> getByCategory(String name) {
         return productRepository.getByCategory(name);
     }
-/*
+
     @Override
-    public Page<Product> getByCategoryAndGender(String name, String gender) {
-        Pageable pageable= PageRequest.of(offset, count); // PageRequest oluşturma
-        return productRepository.getByCategoryAndGender(name, gender, pageRequest);
+    public List<Product> getByCategoryAndGender(String name, String gender, int offset, int count) {
+        Pageable pageable = PageRequest.of(offset,count);
+       return productRepository.getByCategoryAndGender(name,gender,pageable).getContent();
     }
-*/
+
+
     @Override
     public List<Product> getProducts(int offset, int count) {
         Pageable pageable = PageRequest.of(offset, count);

@@ -12,9 +12,9 @@ public record OrderResponseDto(
 
         Enum_OrderStatus status,
 
-        Address address,
+        AddressResponseDto addressResponseDto,
 
-        User user,//Securitiden sonra güncellenecek
+        UserResponseDto userResponseDto,//Securitiden sonra güncellenecek
 
         Double amount,
 
