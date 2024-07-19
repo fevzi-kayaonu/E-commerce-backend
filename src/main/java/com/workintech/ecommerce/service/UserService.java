@@ -1,5 +1,6 @@
 package com.workintech.ecommerce.service;
 
+import com.workintech.ecommerce.entity.User;
 import com.workintech.ecommerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,4 +14,9 @@ public class UserService {
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
+    User findByEmail(String email){
+        return  userRepository.findByEmail(email);
+    }
+
 }

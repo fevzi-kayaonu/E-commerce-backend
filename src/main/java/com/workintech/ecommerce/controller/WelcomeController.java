@@ -8,6 +8,7 @@ import com.workintech.ecommerce.dto.OrderResponseDto;
 import com.workintech.ecommerce.dto.ProductResponseDto;
 import com.workintech.ecommerce.entity.Order;
 import com.workintech.ecommerce.entity.Product;
+import com.workintech.ecommerce.mapper.ProductMapper;
 import com.workintech.ecommerce.service.CategoryService;
 import com.workintech.ecommerce.service.OrderService;
 import com.workintech.ecommerce.service.ProductService;
@@ -22,20 +23,22 @@ import java.util.List;
 public class WelcomeController {
 
      private final ProductService productService;
-     private final CategoryService categoryService;
-     private final OrderService orderService;
+
 
      @Autowired
-     public WelcomeController(ProductService productService, CategoryService categoryService, OrderService orderService) {
+     public WelcomeController(ProductService productService) {
         this.productService = productService;
-        this.categoryService = categoryService;
-        this.orderService = orderService;
     }
 
- /*
+/*
     @GetMapping("/product")
     List<ProductResponseDto> findAllProduct(){
-       return  productService.findAll();
+        List<Product> products = productService.findAll();
+        return products.stream().map(ProductMapper::productToProductResponseDto).toList();
+    }
+    @GetMapping("/product/{id}")
+    Product getProduct(@PathVariable long id){
+        return productService.findById(id);
     }
 
     @GetMapping("/category")
@@ -54,17 +57,17 @@ public class WelcomeController {
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "10") int count) {
         List<Product> products = productService.getProducts(offset, count);
-        return  products;
+        return products.stream().map(ProductMapper::productToProductResponseDto).toList();
     }
 
-    @GetMapping("/")
+    @GetMapping("/category/gender")
     List<ProductResponseDto> getByCategoryAndGender( @RequestParam String name,
                                           @RequestParam String gender,
                                           @RequestParam(defaultValue = "0")  int offset,
                                           @RequestParam(defaultValue = "10")  int count){
 
         List<Product> products = productService.getByCategoryAndGender(name,gender,offset,count);
-        return products;
+        return products.stream().map(ProductMapper::productToProductResponseDto).toList();
     }
 
   /*

@@ -18,7 +18,7 @@ public record OrderResponseDto(
 
         Double amount,
 
-        List<Product> products,
+        List<ProductResponseDto> productResponseDtos,
 
         PaymentResponseDto paymentResponseDto
 ) {
