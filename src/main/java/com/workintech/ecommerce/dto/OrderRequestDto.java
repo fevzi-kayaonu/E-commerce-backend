@@ -16,8 +16,6 @@ public record OrderRequestDto(
         Double amount,
         @Valid
         PaymentRequestDto paymentRequestDto,
-        @Valid
-        UserRequestDto userRequestDto,
         @Size(min = 1, message = "Product list must contain at least one product")
         List<@Valid ProductRequestDto> productRequestDtos
 ) {

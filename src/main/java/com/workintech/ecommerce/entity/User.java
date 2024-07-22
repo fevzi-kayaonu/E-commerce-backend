@@ -68,6 +68,28 @@ public class User implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
     private List<Order> orders ;
 
+
+    public Address setAddAddress(Address address){
+        List<Address> addressList = getAddresses();
+        addressList.add(address);
+        setAddresses(addressList);
+        return address;
+    }
+
+    public CreditCard setAddCreditCard(CreditCard creditCard){
+        List<CreditCard> creditCardList = getCreditCards();
+        creditCardList.add(creditCard);
+        setCreditCards(creditCardList);
+        return creditCard;
+    }
+
+    public Order setAddOrder(Order order){
+        List<Order> orderList = getOrders();
+        orderList.add(order);
+        setOrders(orderList);
+        return order;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role != null ? List.of(role) : List.of();

@@ -16,7 +16,7 @@ public class CreditCardMapper {
         return creditCard;
     }
 
-    public static CreditCardResponseDto CreditCardTocreditCardResponseDto (CreditCard creditCard){
+    public static CreditCardResponseDto creditCardToCreditCardResponseDto(CreditCard creditCard){
         return new CreditCardResponseDto(creditCard.getNo(),creditCard.getName(),creditCard.getExpireMonth(),creditCard.getExpireYear(),creditCard.getCcv());
     }
 

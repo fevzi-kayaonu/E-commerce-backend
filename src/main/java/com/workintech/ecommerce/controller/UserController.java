@@ -1,37 +1,113 @@
 package com.workintech.ecommerce.controller;
 
+import com.workintech.ecommerce.dto.AddressRequestDto;
+import com.workintech.ecommerce.dto.AddressResponseDto;
+import com.workintech.ecommerce.dto.CreditCardRequestDto;
+import com.workintech.ecommerce.dto.CreditCardResponseDto;
 import com.workintech.ecommerce.dto.OrderRequestDto;
 import com.workintech.ecommerce.dto.OrderResponseDto;
+import com.workintech.ecommerce.entity.Address;
+import com.workintech.ecommerce.entity.CreditCard;
 import com.workintech.ecommerce.entity.Order;
+import com.workintech.ecommerce.mapper.AddressMapper;
+import com.workintech.ecommerce.mapper.CreditCardMapper;
 import com.workintech.ecommerce.mapper.OrderMapper;
+import com.workintech.ecommerce.service.AddressService;
+import com.workintech.ecommerce.service.CreditCardService;
+import com.workintech.ecommerce.service.OrderService;
+
+import jakarta.validation.Valid;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/user")
+public class UserController {
+
+    private final OrderService orderService;
+    private final AddressService addressService;
+    private final CreditCardService creditCardService;
+
+    public UserController(OrderService orderService, AddressService addressService, CreditCardService creditCardService) {
+        this.orderService = orderService;
+        this.addressService = addressService;
+        this.creditCardService = creditCardService;
+    }
+
+    // Sipariş verme
+    @PostMapping("/order")
+    public OrderResponseDto saveOrder(@Valid @RequestBody OrderRequestDto orderRequestDto,
+                                      @AuthenticationPrincipal String user_mail) {
+
+        Order order = orderService.addOrder(orderRequestDto, user_mail);
+        return OrderMapper.orderToOrderResponseDto(order);
+    }
+
+    // Adres ekleme
+    @PostMapping("/address")
+    public AddressResponseDto saveAddress(@Valid @RequestBody AddressRequestDto addressRequestDto,
+                                          @AuthenticationPrincipal String user_mail) {
+        Address address = addressService.addAddress(addressRequestDto,user_mail);
+        return AddressMapper.addressToAddressResponseDto(address);
+    }
+
+    // Kredi kartı ekleme
+    @PostMapping("/credit-card")
+    public CreditCardResponseDto saveCreditCard(@Valid @RequestBody CreditCardRequestDto creditCardRequestDto,
+                                                @AuthenticationPrincipal String user_mail) {
+        CreditCard creditCard = creditCardService.addCreditCard(creditCardRequestDto, user_mail);
+        return CreditCardMapper.creditCardToCreditCardResponseDto(creditCard);
+    }
+
+}
+
+
+/*
+package com.workintech.ecommerce.controller;
+
+import com.workintech.ecommerce.dto.AddressRequestDto;
+import com.workintech.ecommerce.dto.AddressResponseDto;
+import com.workintech.ecommerce.dto.OrderRequestDto;
+import com.workintech.ecommerce.dto.OrderResponseDto;
+import com.workintech.ecommerce.entity.Address;
+import com.workintech.ecommerce.entity.Order;
+import com.workintech.ecommerce.mapper.AddressMapper;
+import com.workintech.ecommerce.mapper.OrderMapper;
+import com.workintech.ecommerce.service.AddressService;
 import com.workintech.ecommerce.service.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController
+@RequestMapping("/user")
 public class UserController {
 
     private final OrderService orderService;
+    private final AddressService addressService;
 
-    public UserController(OrderService orderService) {
+
+    public UserController(OrderService orderService, AddressService addressService) {
         this.orderService = orderService;
+        this.addressService = addressService;
     }
 
     //sipariş verme
 
-    @PostMapping("/")
+    @PostMapping("/order")
     OrderResponseDto save(@Valid @RequestBody OrderRequestDto orderRequestDto) {
         Order order = orderService.save(orderService.createOrder(orderRequestDto));
         return OrderMapper.orderToOrderResponseDto(order);
     }
-/*
-    @PostMapping("/save")
-    Order save(@RequestBody Order order){
-        return orderService.save(order);
-    }
-*/
 
     // kendine adrress ekleyebilir
+    @PostMapping("/address")
+    AddressResponseDto save(@Valid @RequestBody AddressRequestDto addressRequestDto){
+        Address address = addressService.save(AddressMapper.addressRequestDtoToAddress(addressRequestDto));
+        return AddressMapper.addressToAddressResponseDto(address);
+    }
 
 
     // kendine credi kartı ekleyebilir
@@ -41,3 +117,4 @@ public class UserController {
 
 
 }
+*/

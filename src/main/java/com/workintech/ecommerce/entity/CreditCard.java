@@ -38,4 +38,12 @@ public class CreditCard {
     @JoinTable(name="user_credit_card",schema = "public",joinColumns = @JoinColumn(name="credit_card_id"),inverseJoinColumns = @JoinColumn(name="user_id"))
     private List<User> users;
 
+
+    public User setAddUser(User user){
+        List<User> userList = getUsers();
+        userList.add(user);
+        setUsers(userList);
+        return user;
+    }
+
 }

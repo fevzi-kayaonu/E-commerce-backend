@@ -14,7 +14,7 @@ public class PaymentMapper {
 
     public static PaymentResponseDto paymentToPaymentResponseDto(Payment payment){
         return new PaymentResponseDto(payment.getId(),payment.getMethod(),payment.getStatus(),payment.getDate(),payment.getAmount(),
-                    CreditCardMapper.CreditCardTocreditCardResponseDto(payment.getCreditCard()));
+                    CreditCardMapper.creditCardToCreditCardResponseDto(payment.getCreditCard()));
     }
 
 }

@@ -1,7 +1,11 @@
 package com.workintech.ecommerce.service;
 
+import com.workintech.ecommerce.dto.AddressRequestDto;
 import com.workintech.ecommerce.entity.Address;
+import com.workintech.ecommerce.entity.User;
+import com.workintech.ecommerce.mapper.AddressMapper;
 import com.workintech.ecommerce.repository.AddressRepository;
+import com.workintech.ecommerce.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +17,12 @@ import java.util.Optional;
 public class AddressServiceImpl implements  AddressService{
 
     private final AddressRepository addressRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public AddressServiceImpl(AddressRepository addressRepository) {
+    public AddressServiceImpl(AddressRepository addressRepository, UserRepository userRepository) {
         this.addressRepository = addressRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -35,18 +41,27 @@ public class AddressServiceImpl implements  AddressService{
         return addressRepository.findById(id).orElseThrow(null) ;
     }
 
-    @Transactional
     @Override
     public Address save(Address address) {
         return addressRepository.save(address);
     }
 
-    // buna koymaya gerek var mı sonuçta dml
-    @Transactional
+
     @Override
     public Address delete(Long id) {
         Address address = findById(id);
         addressRepository.delete(address);
         return address;
+    }
+
+    @Transactional
+    @Override
+    public Address addAddress(AddressRequestDto addressRequestDto,String user_mail) {
+        Optional<User> user = userRepository.findByEmail(user_mail);
+        Address address = AddressMapper.addressRequestDtoToAddress(addressRequestDto);
+        address.setAddUser(user.get());
+        user.get().setAddAddress(address);
+        userRepository.save(user.get());
+        return save(address);
     }
 }

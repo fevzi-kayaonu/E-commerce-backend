@@ -40,4 +40,12 @@ public class Address {
     @JoinTable(name="user_address",schema = "public",joinColumns = @JoinColumn(name="address_id"),inverseJoinColumns = @JoinColumn(name="user_id"))
     private List<User> users;
 
+
+    public User setAddUser(User user){
+        List<User> userList = getUsers();
+        userList.add(user);
+        setUsers(userList);
+        return user;
+    }
+
 }
