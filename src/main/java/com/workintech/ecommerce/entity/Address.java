@@ -5,12 +5,13 @@ import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "adresses", schema = "public")
+@Table(name = "addresses", schema = "public")
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,17 +36,16 @@ public class Address {
     @Column(nullable = false,name= "postal_code")
     private String postalCode;
 
-    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},
-            fetch=FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinTable(name="user_address",schema = "public",joinColumns = @JoinColumn(name="address_id"),inverseJoinColumns = @JoinColumn(name="user_id"))
     private List<User> users;
 
 
-    public User setAddUser(User user){
-        List<User> userList = getUsers();
-        userList.add(user);
-        setUsers(userList);
-        return user;
+    public void addUser(User user){
+        if(users==null){
+            users = new ArrayList<>();
+        }
+        users.add(user);
     }
 
 }

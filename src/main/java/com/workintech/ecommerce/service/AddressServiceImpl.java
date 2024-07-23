@@ -6,7 +6,8 @@ import com.workintech.ecommerce.entity.User;
 import com.workintech.ecommerce.mapper.AddressMapper;
 import com.workintech.ecommerce.repository.AddressRepository;
 import com.workintech.ecommerce.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import org.hibernate.Hibernate;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,12 +57,16 @@ public class AddressServiceImpl implements  AddressService{
 
     @Transactional
     @Override
-    public Address addAddress(AddressRequestDto addressRequestDto,String user_mail) {
+    public Address addAddress(AddressRequestDto addressRequestDto, String user_mail) {
         Optional<User> user = userRepository.findByEmail(user_mail);
-        Address address = AddressMapper.addressRequestDtoToAddress(addressRequestDto);
-        address.setAddUser(user.get());
-        user.get().setAddAddress(address);
-        userRepository.save(user.get());
-        return save(address);
+        if (user.isPresent()) {
+            Address address = AddressMapper.addressRequestDtoToAddress(addressRequestDto);
+
+       //   address.addUser(user.get());
+       // user.get().addAddress(address);
+        //     userRepository.save(user.get());
+            return address;
+        }
+        throw new RuntimeException("User not found");
     }
 }

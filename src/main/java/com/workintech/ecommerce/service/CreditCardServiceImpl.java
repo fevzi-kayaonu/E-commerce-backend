@@ -57,8 +57,8 @@ public class CreditCardServiceImpl implements CreditCardService{
     public CreditCard addCreditCard(CreditCardRequestDto creditCardRequestDto, String user_mail) {
         Optional<User> user = userRepository.findByEmail(user_mail);
         CreditCard creditCard = CreditCardMapper.creditCardRequestDtoCreditCard(creditCardRequestDto);
-        creditCard.setAddUser(user.get());
-        user.get().setAddCreditCard(creditCard);
+        creditCard.addUser(user.get());
+        user.get().addCreditCard(creditCard);
         userRepository.save(user.get());
         return save(creditCard);
     }

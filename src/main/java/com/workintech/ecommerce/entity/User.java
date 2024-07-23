@@ -9,8 +9,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 
 @Data
 @NoArgsConstructor
@@ -46,21 +48,19 @@ public class User implements UserDetails {
     @Column(name = "enabled")
     private Boolean enabled;
 
-    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH} )
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
 
-    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},
-                          fetch=FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinTable(name="user_credit_card",schema = "public",joinColumns = @JoinColumn(name="user_id"),inverseJoinColumns = @JoinColumn(name="credit_card_id"))
     private List<CreditCard> creditCards;
 
 
-    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},
-            fetch=FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinTable(name="user_address",schema = "public",joinColumns = @JoinColumn(name="user_id"),inverseJoinColumns = @JoinColumn(name="address_id"))
-    private List<Address> addresses;
+    private List<Address> addresses; // hard dependency yaparasak 74. saıra gerek kalmıyor bize ne dezavantajı var burasda direk hardepencdency yapmanın
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
     private List<Review> reviews ;
@@ -69,25 +69,25 @@ public class User implements UserDetails {
     private List<Order> orders ;
 
 
-    public Address setAddAddress(Address address){
-        List<Address> addressList = getAddresses();
-        addressList.add(address);
-        setAddresses(addressList);
-        return address;
+    public void addAddress(Address address){
+        if(addresses==null){
+            addresses = new ArrayList<>();
+        }
+        addresses.add(address);
     }
 
-    public CreditCard setAddCreditCard(CreditCard creditCard){
-        List<CreditCard> creditCardList = getCreditCards();
-        creditCardList.add(creditCard);
-        setCreditCards(creditCardList);
-        return creditCard;
+    public void addCreditCard(CreditCard creditCard){
+        if(creditCards==null){
+            creditCards = new ArrayList<>();
+        }
+        creditCards.add(creditCard);
     }
 
-    public Order setAddOrder(Order order){
-        List<Order> orderList = getOrders();
-        orderList.add(order);
-        setOrders(orderList);
-        return order;
+    public void addOrder(Order order){
+        if(orders==null){
+            orders = new ArrayList<>();
+        }
+        orders.add(order);
     }
 
     @Override

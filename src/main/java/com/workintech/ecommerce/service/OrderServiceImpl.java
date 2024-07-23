@@ -56,7 +56,7 @@ public class OrderServiceImpl implements OrderService {
         Optional<User> user = userRepository.findByEmail(user_mail);
         Order order = OrderMapper.orderRequestDtoToOrder(orderRequestDto);
         order.setUser(user.get());
-        user.get().setAddOrder(order);
+        user.get().addOrder(order);
         userRepository.save(user.get());
         return save(order);
     }

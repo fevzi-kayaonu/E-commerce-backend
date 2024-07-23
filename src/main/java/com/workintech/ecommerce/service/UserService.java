@@ -19,15 +19,14 @@ public class UserService implements UserDetailsService {
     }
 
     User findByEmail(String email){
-        return  userRepository.findByEmail(email).orElseThrow(null);
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
     }
-
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return findByEmail(username);
     }
-
 
     public void banUser(Long userId, String reason) {
         User user = userRepository.findById(userId)

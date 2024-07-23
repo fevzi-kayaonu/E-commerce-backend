@@ -1,5 +1,6 @@
 package com.workintech.ecommerce.service;
 
+import com.workintech.ecommerce.entity.Enum_Role;
 import com.workintech.ecommerce.entity.Role;
 import com.workintech.ecommerce.entity.User;
 import com.workintech.ecommerce.repository.RoleRepository;
@@ -24,13 +25,16 @@ public class RegisterService {
 
     public User register(String firstName, String lastName, String email, String password) {
         String encodePassword = passwordEncoder.encode(password);
-        Role role = roleRepository.findByAuthority("USER").orElseThrow(() -> new RuntimeException("Role not found"));
+        Role role = roleRepository.findByAuthority(Enum_Role.USER).orElseThrow(() -> new RuntimeException("Role not found"));
 
         User user = new User();
         user.setPassword(encodePassword);
         user.setEmail(email);
         user.setFirstName(firstName);
         user.setLastName(lastName);
+        user.setAccountLocked(false);
+        user.setEnabled(true);
+        user.setRole(role);
 
         return userRepository.save(user);
     }
