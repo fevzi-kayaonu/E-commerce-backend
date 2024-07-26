@@ -2,13 +2,18 @@ package com.workintech.ecommerce.service;
 
 import com.workintech.ecommerce.dto.OrderRequestDto;
 import com.workintech.ecommerce.entity.*;
+import com.workintech.ecommerce.exceptions.ErrorException;
 import com.workintech.ecommerce.mapper.OrderMapper;
+import com.workintech.ecommerce.mapper.PaymentMapper;
 import com.workintech.ecommerce.repository.AddressRepository;
 import com.workintech.ecommerce.repository.OrderRepository;
 import com.workintech.ecommerce.repository.ProductRepository;
 import com.workintech.ecommerce.repository.UserRepository;
+import com.workintech.ecommerce.entity.*;
+import com.workintech.ecommerce.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,21 +24,20 @@ import java.util.Optional;
 public class  OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
-    private final ProductRepository productRepository;
-    private final AddressRepository addressRepository;
-    private final PaymentService paymentService;
+    private final UserService userService;
+    private final ProductService productService;
+    private final AddressService addressService;
+    private final CreditCardService creditCardService;
 
 
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository, ProductRepository productRepository, AddressRepository addressRepository, PaymentService paymentService) {
+    public OrderServiceImpl(OrderRepository orderRepository, UserService userService, ProductService productService, AddressService addressService, CreditCardService creditCardService) {
         this.orderRepository = orderRepository;
-        this.userRepository = userRepository;
-        this.productRepository = productRepository;
-        this.addressRepository = addressRepository;
-
-        this.paymentService = paymentService;
+        this.userService = userService;
+        this.productService = productService;
+        this.addressService = addressService;
+        this.creditCardService = creditCardService;
     }
 
 
@@ -44,9 +48,8 @@ public class  OrderServiceImpl implements OrderService {
 
     @Override
     public Order findById(Long id) {
-        return orderRepository.findById(id).orElseThrow(null) ;
+        return orderRepository.findById(id).orElseThrow(() -> new ErrorException("Order not found", HttpStatus.NOT_FOUND));
     }
-
     @Override
     public Order save(Order order) {
         return orderRepository.save(order);
@@ -60,41 +63,43 @@ public class  OrderServiceImpl implements OrderService {
     }
 
     @Transactional
-    @Override
     public Order addOrder(OrderRequestDto orderRequestDto, String user_mail) {
-        Optional<User> user = userRepository.findByEmail(user_mail);
+        // credit cart bul
+        CreditCard creditCard = creditCardService.findById((orderRequestDto.paymentRequestDto().creditCardId()));
+        // Adresi bul
+        Address address = addressService.findById(orderRequestDto.addressId());
+        // Kullanıcıyı bul
+        User user = userService.findByEmail(user_mail);
+        // Ürünleri bul
         List<Product> productList = orderRequestDto.productIdList().stream()
-                .map(item -> productRepository.findById(item)
-                        .orElseThrow(() -> new RuntimeException("Product not found")))
+                .map(productService::findById
+                        )
                 .toList();
 
-        Double totalAmount = productList.stream()
-                .mapToDouble(Product::getPrice)
-                .sum();
+        // Yeni siparişi oluştur
+        Order order = OrderMapper.orderRequestDtoToOrder(orderRequestDto);
+        order.setAddress(address);
+        order.setUser(user);
+        order.setProducts(productList);
+        order.setAmount(calculateTotalAmount(productList)); // Toplam tutarı hesapla
+        order.setStatus(orderRequestDto.status()); // Varsayılan bir durum belirleyin
 
-        Address address = addressRepository.findById(orderRequestDto.addressId())
-                .orElseThrow(() -> new RuntimeException("Address not found"));
+        // Siparişi ve ödemeyi oluştur
+        Payment payment = PaymentMapper.paymentReqestDtoToPayment(orderRequestDto.paymentRequestDto());
+        payment.setOrder(order);
+        payment.setCreditCard(creditCard);// Ödemeyi siparişe bağla
+        order.setPayment(payment); // Siparişi ödemeye bağla
 
-        if (user.isPresent()) {
-            Order order = OrderMapper.orderRequestDtoToOrder(orderRequestDto);
-            order.setProducts(productList);
-            order.setUser(user.get());
-            order.setAddress(address);
-            order.setAmount(totalAmount);
-            order.setStatus(orderRequestDto.status());
-
-            Order savedOrder = save(order);
-            System.out.println("girdim order :" + savedOrder);
-
-            // Ödemeyi ekle
-            Payment payment = paymentService.addPayment(orderRequestDto.paymentRequestDto());
-            payment.setOrder(savedOrder); // Ödeme nesnesinin order referansını ayarla
-
-            paymentService.save(payment); // Ödemeyi kaydet
-            System.out.println("girdim payment :" + payment);
-            savedOrder.setPayment(payment); // Sipariş nesnesinin payment referansını ayarla
-            return save(savedOrder); // Güncellenmiş siparişi kaydet
-        }
-        throw new RuntimeException("Order not found");
+        // Siparişi ve ödemeyi kaydet
+        user.addOrder(order);
+        return order; // Payment otomatik olarak kaydedilir
     }
+
+    private Double calculateTotalAmount(List<Product> products) {
+        return products.stream()
+                .mapToDouble(Product::getPrice) // Ürün fiyatını toplar
+                .sum();
+    }
+
 }
+

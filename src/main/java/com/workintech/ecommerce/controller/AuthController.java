@@ -4,6 +4,7 @@ import com.workintech.ecommerce.service.RegisterService;
 import com.workintech.ecommerce.dto.UserRegisterRequestDto;
 import com.workintech.ecommerce.dto.UserResponseDto;
 import com.workintech.ecommerce.mapper.UserMapper;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,7 @@ public class AuthController {
 
     //kayıt olabilmeli
     @PostMapping("/register")
-    public UserResponseDto register(@RequestBody UserRegisterRequestDto userRegisterRequestDto){
+    public UserResponseDto register(@Valid @RequestBody UserRegisterRequestDto userRegisterRequestDto){
          return UserMapper.userToUserResponseDto(registerService.register(userRegisterRequestDto.firstName(),userRegisterRequestDto.lastName(),
                                                  userRegisterRequestDto.email(),userRegisterRequestDto.password()));
     }

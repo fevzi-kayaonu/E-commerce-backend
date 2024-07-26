@@ -2,36 +2,38 @@ package com.workintech.ecommerce.service;
 
 
 import com.workintech.ecommerce.dto.ProductRequestDto;
-import com.workintech.ecommerce.entity.Image;
-import com.workintech.ecommerce.entity.Product;
+import com.workintech.ecommerce.entity.*;
+import com.workintech.ecommerce.exceptions.ErrorException;
+import com.workintech.ecommerce.mapper.ImageMapper;
 import com.workintech.ecommerce.repository.CategoryRepository;
 import com.workintech.ecommerce.repository.ImageRepository;
 import com.workintech.ecommerce.repository.ProductRepository;
-import com.workintech.ecommerce.entity.Category;
 import com.workintech.ecommerce.mapper.ProductMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService{
     //Bir servise birden fazla reposiroty inject edersem yan eksisi olur mu , (daha fazla repository eklersem daha basit jpql lerle işleri çözebiliyorum)
     private final ProductRepository productRepository;
-    private final ImageRepository imageRepository;
-    private final CategoryRepository categoryRepository;
+    private final ImageService imageService;
+    private final CategoryService categoryService;
 
 
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, ImageRepository imageRepository, CategoryRepository categoryRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, ImageService imageService, CategoryService categoryService) {
         this.productRepository = productRepository;
-        this.imageRepository = imageRepository;
-        this.categoryRepository = categoryRepository;
+        this.imageService = imageService;
+        this.categoryService = categoryService;
     }
 
 
@@ -42,7 +44,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public Product findById(Long id) {
-        return productRepository.findById(id).orElseThrow(null) ;
+        return productRepository.findById(id).orElseThrow(() -> new ErrorException("Product not found", HttpStatus.NOT_FOUND));
     }
 
 
@@ -84,14 +86,15 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public List<Product> getByCategory(String name) {
-        return productRepository.getByCategory(name);
+        return productRepository.getByCategory(name).orElseThrow(() -> new ErrorException("Category not found :" + name, HttpStatus.NOT_FOUND));
     }
 
     @Override
-    public List<Product> getByCategoryAndGender(String name, String gender, int offset, int count) {
-        Pageable pageable = PageRequest.of(offset,count);
-       return productRepository.getByCategoryAndGender(name,gender,pageable).getContent();
+    public List<Product> getByCategoryAndGender(Enum_Category name, Enum_Gender gender, int offset, int count) {
+        Pageable pageable = PageRequest.of(offset, count);
+        return productRepository.getByCategoryAndGender(name, gender, pageable).orElseThrow(() -> new ErrorException("No products found for category: " + name + " and gender: " + gender, HttpStatus.NOT_FOUND)).getContent();
     }
+
 
 
     @Override
@@ -99,28 +102,33 @@ public class ProductServiceImpl implements ProductService{
         Pageable pageable = PageRequest.of(offset, count);
         return productRepository.findAll(pageable).getContent();
     }
+
     @Transactional
     @Override
     public Product createProduct(ProductRequestDto productRequestDto) {
 
-        Category category = categoryRepository.getByName(productRequestDto.category());
         Product product = ProductMapper.productRequestDtoToProduct(productRequestDto);
-        product.setCategory(category);
 
-       // System.out.println("geldim : " + product);
-       // product.setImages(productRequestDto.imageRequestDto().stream().map(ImageMapper::imageRequestDtoToImage).toList());
+        Category category = categoryService.getByName(productRequestDto.category());
+
+       product.setCategory(category);
+
+        category.addProduct(product);
+        System.out.println("girdim :" + product);
+
+        product.setImages(productRequestDto.imageRequestDto().stream().map(item -> {
+            Image image = new Image();
+            image.setProduct(product);
+            image.setUrl(item.url());
+            return imageService.save(image);
+        }).toList());
+
 
 // Burada image ları tek tek eklmek yerine productı doğrudan eklemeye çalıştığımda imeges tablosunda ki product_id
 // null olamaz hatası aldım çünkü product daha oluşturulmamıştı. (Product da id oluşturulurken bunu
 // generatedType ı SEQUENCE olsaydı bu sorun düzelirmiydi yoksa başka bir çözümü varmı)
 
 
-        productRequestDto.imageRequestDto().stream().forEach(item -> {
-            Image image = new Image();
-            image.setProduct(product);
-            image.setUrl(item.url());
-            imageRepository.save(image);
-        });
 
         return product;
     }

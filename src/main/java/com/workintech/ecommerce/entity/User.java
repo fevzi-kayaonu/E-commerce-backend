@@ -65,6 +65,23 @@ public class User implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Order> orders = new HashSet<>();
 
+    public void addOrder(Order order){
+        orders.add(order);
+    }
+
+    public void addReviews(Review review){
+        reviews.add(review);
+    }
+
+    public void addAddress(Address address){
+        addresses.add(address);
+    }
+
+    public void addCreditCard(CreditCard creditCard){
+        creditCards.add(creditCard);
+        creditCard.addUser(this);
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role != null ? List.of(role) : List.of();
@@ -97,10 +114,35 @@ public class User implements UserDetails {
 
         return Boolean.TRUE.equals(enabled);
     }
-    /*
-    public String toString() {
-        return "User(id=" + this.getId() + ", firstName=" + this.getFirstName() + ", lastName=" + this.getLastName() + ", email=" + this.getEmail() + ", password=" + this.getPassword() + ", accountExpirationDate=" + this.getAccountExpirationDate() + ", accountLocked=" + this.getAccountLocked() + ", credentialsExpirationDate=" + this.getCredentialsExpirationDate() + ", enabled=" + this.getEnabled() + ", role=" + this.getRole() + ", creditCards=" + this.getCreditCards() + ", addresses=" + this.getAddresses() + ", reviews=" + this.getReviews() +")";
+
+    @Override
+    public int hashCode() {
+        int result = 1;
+        Object $id = this.getId();
+        result = result * 59 + ($id == null ? 43 : $id.hashCode());
+        Object $accountLocked = this.getAccountLocked();
+        result = result * 59 + ($accountLocked == null ? 43 : $accountLocked.hashCode());
+        Object $enabled = this.getEnabled();
+        result = result * 59 + ($enabled == null ? 43 : $enabled.hashCode());
+        Object $firstName = this.getFirstName();
+        result = result * 59 + ($firstName == null ? 43 : $firstName.hashCode());
+        Object $lastName = this.getLastName();
+        result = result * 59 + ($lastName == null ? 43 : $lastName.hashCode());
+        Object $email = this.getEmail();
+        result = result * 59 + ($email == null ? 43 : $email.hashCode());
+        Object $password = this.getPassword();
+        result = result * 59 + ($password == null ? 43 : $password.hashCode());
+        Object $accountExpirationDate = this.getAccountExpirationDate();
+        result = result * 59 + ($accountExpirationDate == null ? 43 : $accountExpirationDate.hashCode());
+        Object $credentialsExpirationDate = this.getCredentialsExpirationDate();
+        result = result * 59 + ($credentialsExpirationDate == null ? 43 : $credentialsExpirationDate.hashCode());
+        return result;
     }
-     */
+
+    @Override
+    public String toString() {
+        Long var10000 = this.getId();
+        return "User(id=" + var10000 + ", firstName=" + this.getFirstName() + ", lastName=" + this.getLastName() + ", email=" + this.getEmail() + ", password=" + this.getPassword() + ", accountExpirationDate=" + this.getAccountExpirationDate() + ", accountLocked=" + this.getAccountLocked() + ", credentialsExpirationDate=" + this.getCredentialsExpirationDate() + ", enabled=" + this.getEnabled() + ", role=" + this.getRole() + ", creditCards=" + this.getCreditCards() + ", addresses=" + this.getAddresses() + ", reviews=" + this.getReviews() + ", orders=" + this.getOrders() + ")";
+    }
 }
 

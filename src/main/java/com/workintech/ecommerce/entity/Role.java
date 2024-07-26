@@ -32,10 +32,21 @@ public class Role implements GrantedAuthority {
     public String getAuthority() {
         return role.toString();
     }
-    /*
+
+    @Override
+    public int hashCode() {
+        int result = 1;
+        Object $id = this.getId();
+        result = result * 59 + ($id == null ? 43 : $id.hashCode());
+        Object $role = this.getRole();
+        result = result * 59 + ($role == null ? 43 : $role.hashCode());
+
+        return result;
+    }
+
     @Override
     public String toString() {
         Long var10000 = this.getId();
-        return "Role(id=" + var10000 + ", role=" + this.getRole() + ")";
-    }*/
+        return "Role(id=" + var10000 + ", role=" + this.getRole() +")";
+    }
 }

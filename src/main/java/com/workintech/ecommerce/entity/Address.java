@@ -36,7 +36,14 @@ public class Address {
     @Column(nullable = false,name= "postal_code")
     private String postalCode;
 
-    @ManyToMany(mappedBy = "addresses", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(mappedBy = "addresses", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<User> users = new ArrayList<>();
+
+
+    public void addUser(User user){
+
+        users.add(user);
+        user.addAddress(this);
+    }
 
 }

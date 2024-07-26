@@ -1,8 +1,11 @@
 package com.workintech.ecommerce.service;
 
+import com.workintech.ecommerce.dto.UserBanRequestDto;
+import com.workintech.ecommerce.exceptions.ErrorException;
 import com.workintech.ecommerce.repository.UserRepository;
 import com.workintech.ecommerce.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,15 +31,15 @@ public class UserService implements UserDetailsService {
         return findByEmail(username);
     }
 
-    public void banUser(Long userId, String reason) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+    public User banUser(UserBanRequestDto userBanRequestDto) {
+        User user = userRepository.findById(userBanRequestDto.userId())
+                .orElseThrow(() -> new ErrorException("User not found with id: " + userBanRequestDto.userId(), HttpStatus.NOT_FOUND));
 
         // Kullanıcıyı banlama işlemi
         user.setAccountLocked(true); // Kullanıcıyı kilitle
         user.setEnabled(false); // Kullanıcıyı devre dışı bırak
         // Ban sebebini kaydetmek için ek bir alan varsa, burada güncelleyebilirsiniz.
 
-        userRepository.save(user); // Güncellenmiş kullanıcıyı kaydet
+       return userRepository.save(user); // Güncellenmiş kullanıcıyı kaydet
     }
 }

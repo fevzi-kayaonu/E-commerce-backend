@@ -2,10 +2,12 @@ package com.workintech.ecommerce.service;
 
 import com.workintech.ecommerce.entity.Address;
 import com.workintech.ecommerce.entity.User;
+import com.workintech.ecommerce.exceptions.ErrorException;
 import com.workintech.ecommerce.mapper.AddressMapper;
 import com.workintech.ecommerce.repository.AddressRepository;
 import com.workintech.ecommerce.repository.UserRepository;
 import com.workintech.ecommerce.dto.AddressRequestDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,12 +19,12 @@ import java.util.Optional;
 public class AddressServiceImpl implements  AddressService{
 
     private final AddressRepository addressRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public AddressServiceImpl(AddressRepository addressRepository, UserRepository userRepository) {
+    public AddressServiceImpl(AddressRepository addressRepository, UserService userService) {
         this.addressRepository = addressRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -38,7 +40,7 @@ public class AddressServiceImpl implements  AddressService{
             return address.get();
         }
         */
-        return addressRepository.findById(id).orElseThrow(null) ;
+        return addressRepository.findById(id).orElseThrow(() -> new ErrorException("Address not found", HttpStatus.NOT_FOUND));
     }
 
     @Override
@@ -57,15 +59,10 @@ public class AddressServiceImpl implements  AddressService{
     @Transactional
     @Override
     public Address addAddress(AddressRequestDto addressRequestDto, String user_mail) {
-        Optional<User> user = userRepository.findByEmail(user_mail);
-        if (user.isPresent()) {
+       User user = userService.findByEmail(user_mail);
             Address address = AddressMapper.addressRequestDtoToAddress(addressRequestDto);
-
-           //  user.get().addAddress(address);
-            address.addUser(user.get());
-         //   userRepository.save(user.get());
-            return save(address);
-        }
-        throw new RuntimeException("User not found");
+           // user.get().addAddress(address);
+            address.addUser(user);
+            return address;
     }
 }

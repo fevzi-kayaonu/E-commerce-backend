@@ -2,6 +2,7 @@ package com.workintech.ecommerce.dto;
 
 import com.workintech.ecommerce.entity.Enum_Category;
 import com.workintech.ecommerce.entity.Enum_Gender;
+import com.workintech.ecommerce.entity.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

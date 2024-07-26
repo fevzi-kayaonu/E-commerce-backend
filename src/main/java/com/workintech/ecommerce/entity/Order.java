@@ -50,11 +50,24 @@ public class Order {
     @OneToOne(cascade=CascadeType.ALL,mappedBy = "order")
     private Payment payment;
 
-    /*
+
+    @Override
+    public int hashCode() {
+        int result = 1;
+        Object $id = this.getId();
+        result = result * 59 + ($id == null ? 43 : $id.hashCode());
+        Object $amount = this.getAmount();
+        result = result * 59 + ($amount == null ? 43 : $amount.hashCode());
+        Object $date = this.getDate();
+        result = result * 59 + ($date == null ? 43 : $date.hashCode());
+        Object $status = this.getStatus();
+        result = result * 59 + ($status == null ? 43 : $status.hashCode());
+        return result;
+    }
+
     @Override
     public String toString() {
         Long var10000 = this.getId();
-        return "Order(id=" + var10000 + ", date=" + this.getDate() + ", status=" + this.getStatus() + ", address=" + this.getAddress() + ", user=" + this.getUser() + ", amount=" + this.getAmount() + ", products=" + this.getProducts() + ")";
+        return "Order(id=" + var10000 + ", date=" + this.getDate() + ", status=" + this.getStatus() + ", amount=" + this.getAmount() +")";
     }
-    */
 }

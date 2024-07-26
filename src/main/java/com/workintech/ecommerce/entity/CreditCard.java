@@ -39,9 +39,6 @@ public class CreditCard {
 
 
     public void addUser(User user){
-        if(users==null){
-            users = new ArrayList<>();
-        }
         users.add(user);
     }
 

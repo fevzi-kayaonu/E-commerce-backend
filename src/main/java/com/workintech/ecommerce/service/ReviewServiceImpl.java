@@ -1,8 +1,10 @@
 package com.workintech.ecommerce.service;
 
 import com.workintech.ecommerce.entity.Review;
+import com.workintech.ecommerce.exceptions.ErrorException;
 import com.workintech.ecommerce.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,7 +28,7 @@ public class ReviewServiceImpl implements ReviewService{
     @Override
     public Review findById(Long id) {
 
-        return reviewRepository.findById(id).orElseThrow(null) ;
+        return reviewRepository.findById(id).orElseThrow(() -> new ErrorException("Review not found", HttpStatus.NOT_FOUND));
     }
 
     @Override

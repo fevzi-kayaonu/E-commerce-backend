@@ -3,11 +3,13 @@ package com.workintech.ecommerce.service;
 import com.workintech.ecommerce.dto.CreditCardRequestDto;
 import com.workintech.ecommerce.entity.CreditCard;
 import com.workintech.ecommerce.entity.User;
+import com.workintech.ecommerce.exceptions.ErrorException;
 import com.workintech.ecommerce.mapper.CreditCardMapper;
 import com.workintech.ecommerce.repository.CreditCardRepository;
 import com.workintech.ecommerce.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,12 +20,12 @@ public class CreditCardServiceImpl implements CreditCardService{
 
 
     private final CreditCardRepository creditCardRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public CreditCardServiceImpl(CreditCardRepository creditCardRepository, UserRepository userRepository) {
+    public CreditCardServiceImpl(CreditCardRepository creditCardRepository, UserService userService) {
         this.creditCardRepository = creditCardRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -34,7 +36,9 @@ public class CreditCardServiceImpl implements CreditCardService{
     @Override
     public CreditCard findById(Long id) {
         Optional<CreditCard> optionalCreditCard = creditCardRepository.findById(id);
-        return optionalCreditCard.orElse(null);
+        return optionalCreditCard
+                .orElseThrow(() -> new ErrorException("Credit Card not found", HttpStatus.NOT_FOUND));
+
     }
 
     @Override
@@ -44,27 +48,23 @@ public class CreditCardServiceImpl implements CreditCardService{
 
     @Override
     public CreditCard delete(Long id) {
-        Optional<CreditCard> optionalCreditCard = creditCardRepository.findById(id);
-        if (optionalCreditCard.isPresent()) {
-            creditCardRepository.deleteById(id);
-            return optionalCreditCard.get();
-        }
-        return null;
+        CreditCard creditCard = findById(id);
+        creditCardRepository.delete(creditCard);
+        return creditCard;
     }
 
     @Transactional
     @Override
     public CreditCard addCreditCard(CreditCardRequestDto creditCardRequestDto, String user_mail) {
-        Optional<User> user = userRepository.findByEmail(user_mail);
-        if (user.isPresent()) {
+        User user = userService.findByEmail(user_mail);
 
             CreditCard creditCard = CreditCardMapper.creditCardRequestDtoCreditCard(creditCardRequestDto);
-            creditCard.addUser(user.get());
-            // user.get().addCreditCard(creditCard);
+           // creditCard.addUser(user.get());
+            user.addCreditCard(creditCard);
             // userRepository.save(user.get());
-            return save(creditCard);
-        }
-        throw new RuntimeException("Credit Card not found");
+            return creditCard;
+
+        //throw new RuntimeException("Credit Card not found");
     }
 
 }
