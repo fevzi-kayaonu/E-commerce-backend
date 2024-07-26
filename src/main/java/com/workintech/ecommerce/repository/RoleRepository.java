@@ -10,5 +10,5 @@ import java.util.Optional;
 
 public interface RoleRepository extends JpaRepository<Role,Long> {
     @Query("SELECT r FROM Role r WHERE r.role= :role")
-    Optional<Role> findByAuthority(@Param("role")Enum_Role role);
+    Optional<Role> findByAuthority(@Param("role") Enum_Role role);
 }

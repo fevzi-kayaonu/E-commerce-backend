@@ -2,7 +2,6 @@ package com.workintech.ecommerce.service;
 
 import com.workintech.ecommerce.entity.Review;
 import com.workintech.ecommerce.repository.ReviewRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -2,7 +2,6 @@ package com.workintech.ecommerce.dto;
 
 import com.workintech.ecommerce.entity.Enum_Category;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
 
 
 public record CategoryRequestDto( @NotNull(message = "Category name cannot be null")

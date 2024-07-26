@@ -1,17 +1,14 @@
 package com.workintech.ecommerce.entity;
 
 
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 
 @Data
@@ -21,19 +18,19 @@ import java.util.List;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private Long id;
 
-    @Column(nullable = false, length = 45,name="first_name")
+    @Column(nullable = false, length = 45, name = "first_name")
     private String firstName;
 
-    @Column(nullable = false, length = 45,name="last_name")
+    @Column(nullable = false, length = 45, name = "last_name")
     private String lastName;
 
-    @Column(nullable = false, length = 45, unique = true,name="email")
+    @Column(nullable = false, length = 45, unique = true, name = "email")
     private String email;
 
-    @Column(nullable = false, length = 45,name="password")
+    @Column(nullable = false, length = 45, name = "password")
     private String password;
 
     @Column(name = "account_expiration_date")
@@ -48,47 +45,25 @@ public class User implements UserDetails {
     @Column(name = "enabled")
     private Boolean enabled;
 
-    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH} )
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
 
-    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    @JoinTable(name="user_credit_card",schema = "public",joinColumns = @JoinColumn(name="user_id"),inverseJoinColumns = @JoinColumn(name="credit_card_id"))
-    private List<CreditCard> creditCards;
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(name = "user_credit_card", schema = "public", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "credit_card_id"))
+    private Set<CreditCard> creditCards = new HashSet<>();
 
 
-    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    @JoinTable(name="user_address",schema = "public",joinColumns = @JoinColumn(name="user_id"),inverseJoinColumns = @JoinColumn(name="address_id"))
-    private List<Address> addresses; // hard dependency yaparasak 74. saıra gerek kalmıyor bize ne dezavantajı var burasda direk hardepencdency yapmanın
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(name = "user_address", schema = "public", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "address_id"))
+    private List<Address> addresses = new ArrayList<>(); // hard dependency yaparasak 74. saıra gerek kalmıyor bize ne dezavantajı var burasda direk hardepencdency yapmanın
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
-    private List<Review> reviews ;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private Set<Review> reviews = new LinkedHashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
-    private List<Order> orders ;
-
-
-    public void addAddress(Address address){
-        if(addresses==null){
-            addresses = new ArrayList<>();
-        }
-        addresses.add(address);
-    }
-
-    public void addCreditCard(CreditCard creditCard){
-        if(creditCards==null){
-            creditCards = new ArrayList<>();
-        }
-        creditCards.add(creditCard);
-    }
-
-    public void addOrder(Order order){
-        if(orders==null){
-            orders = new ArrayList<>();
-        }
-        orders.add(order);
-    }
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private Set<Order> orders = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -122,5 +97,10 @@ public class User implements UserDetails {
 
         return Boolean.TRUE.equals(enabled);
     }
+    /*
+    public String toString() {
+        return "User(id=" + this.getId() + ", firstName=" + this.getFirstName() + ", lastName=" + this.getLastName() + ", email=" + this.getEmail() + ", password=" + this.getPassword() + ", accountExpirationDate=" + this.getAccountExpirationDate() + ", accountLocked=" + this.getAccountLocked() + ", credentialsExpirationDate=" + this.getCredentialsExpirationDate() + ", enabled=" + this.getEnabled() + ", role=" + this.getRole() + ", creditCards=" + this.getCreditCards() + ", addresses=" + this.getAddresses() + ", reviews=" + this.getReviews() +")";
+    }
+     */
 }
 

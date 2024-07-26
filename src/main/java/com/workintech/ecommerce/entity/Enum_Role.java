@@ -1,7 +1,7 @@
 package com.workintech.ecommerce.entity;
 
 public enum Enum_Role {
-    ADMIN,
+    ADMİN,
     USER,
     TEAM
 }

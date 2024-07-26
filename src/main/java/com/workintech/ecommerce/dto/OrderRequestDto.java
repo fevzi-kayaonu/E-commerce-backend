@@ -1,8 +1,8 @@
 package com.workintech.ecommerce.dto;
 
+import com.workintech.ecommerce.entity.Enum_OrderStatus;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 
@@ -10,13 +10,14 @@ import java.util.List;
 
 public record OrderRequestDto(
         @Valid
-        AddressRequestDto addressRequestDto,
-        @NotNull(message = "Amount cannot be null")
-        @Positive(message = "Amount must be positive")//Validasyon yazılacak
-        Double amount,
+        Long addressId,
+
+        @NotNull(message = "Order status name cannot be null")
+        Enum_OrderStatus status,
+
         @Valid
         PaymentRequestDto paymentRequestDto,
         @Size(min = 1, message = "Product list must contain at least one product")
-        List<@Valid ProductRequestDto> productRequestDtos
+        List<Long> productIdList
 ) {
 }

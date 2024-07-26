@@ -21,20 +21,21 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authManagar(UserDetailsService userDetailsService){
+    public AuthenticationManager authManager(UserDetailsService userDetailsService) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
         return new ProviderManager(provider);
     }
 
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/welcome/**").permitAll();
                     auth.requestMatchers("/auth/**").permitAll();
-                    auth.requestMatchers("/admin/**").hasAuthority("ADMIN");
-                    auth.requestMatchers("/user/**").hasAnyAuthority("USER", "ADMIN");
+                    auth.requestMatchers("/admin/**").hasAuthority("ADMİN");
+                    auth.requestMatchers("/user/**").hasAnyAuthority("USER", "ADMİN");
                     auth.anyRequest().authenticated();
         })
                     .formLogin(Customizer.withDefaults())

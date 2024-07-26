@@ -1,12 +1,11 @@
 package com.workintech.ecommerce.service;
 
-import com.workintech.ecommerce.dto.AddressRequestDto;
 import com.workintech.ecommerce.entity.Address;
 import com.workintech.ecommerce.entity.User;
 import com.workintech.ecommerce.mapper.AddressMapper;
 import com.workintech.ecommerce.repository.AddressRepository;
 import com.workintech.ecommerce.repository.UserRepository;
-import org.hibernate.Hibernate;
+import com.workintech.ecommerce.dto.AddressRequestDto;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,10 +61,10 @@ public class AddressServiceImpl implements  AddressService{
         if (user.isPresent()) {
             Address address = AddressMapper.addressRequestDtoToAddress(addressRequestDto);
 
-       //   address.addUser(user.get());
-       // user.get().addAddress(address);
-        //     userRepository.save(user.get());
-            return address;
+           //  user.get().addAddress(address);
+            address.addUser(user.get());
+         //   userRepository.save(user.get());
+            return save(address);
         }
         throw new RuntimeException("User not found");
     }

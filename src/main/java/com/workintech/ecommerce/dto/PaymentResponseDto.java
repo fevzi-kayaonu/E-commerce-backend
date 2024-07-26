@@ -1,6 +1,5 @@
 package com.workintech.ecommerce.dto;
 
-import com.workintech.ecommerce.entity.CreditCard;
 import com.workintech.ecommerce.entity.Enum_PaymentMethod;
 import com.workintech.ecommerce.entity.Enum_PaymentStatus;
 

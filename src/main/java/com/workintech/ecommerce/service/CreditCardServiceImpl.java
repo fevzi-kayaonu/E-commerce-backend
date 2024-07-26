@@ -56,11 +56,15 @@ public class CreditCardServiceImpl implements CreditCardService{
     @Override
     public CreditCard addCreditCard(CreditCardRequestDto creditCardRequestDto, String user_mail) {
         Optional<User> user = userRepository.findByEmail(user_mail);
-        CreditCard creditCard = CreditCardMapper.creditCardRequestDtoCreditCard(creditCardRequestDto);
-        creditCard.addUser(user.get());
-        user.get().addCreditCard(creditCard);
-        userRepository.save(user.get());
-        return save(creditCard);
+        if (user.isPresent()) {
+
+            CreditCard creditCard = CreditCardMapper.creditCardRequestDtoCreditCard(creditCardRequestDto);
+            creditCard.addUser(user.get());
+            // user.get().addCreditCard(creditCard);
+            // userRepository.save(user.get());
+            return save(creditCard);
+        }
+        throw new RuntimeException("Credit Card not found");
     }
 
 }

@@ -34,9 +34,8 @@ public class CreditCard {
     @Column(nullable = false,name="ccv")
     private Integer ccv;
 
-    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    @JoinTable(name="user_credit_card",schema = "public",joinColumns = @JoinColumn(name="credit_card_id"),inverseJoinColumns = @JoinColumn(name="user_id"))
-    private List<User> users;
+    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},mappedBy = "creditCards")
+    private List<User> users =  new ArrayList<>();
 
 
     public void addUser(User user){

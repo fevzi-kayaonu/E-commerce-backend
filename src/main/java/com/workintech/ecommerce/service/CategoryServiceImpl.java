@@ -2,8 +2,8 @@ package com.workintech.ecommerce.service;
 
 import com.workintech.ecommerce.entity.Category;
 
+import com.workintech.ecommerce.entity.Enum_Category;
 import com.workintech.ecommerce.repository.CategoryRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +43,7 @@ public class CategoryServiceImpl implements  CategoryService{
     }
 
     @Override
-    public Category getByName(String name) {
+    public Category getByName(Enum_Category name) {
         return categoryRepository.getByName(name);
     }
 }

@@ -1,10 +1,11 @@
 package com.workintech.ecommerce.controller;
 
-import com.workintech.ecommerce.dto.ProductRequestDto;
-import com.workintech.ecommerce.dto.ProductResponseDto;
-import com.workintech.ecommerce.dto.UserBanRequestDto;
+import com.workintech.ecommerce.dto.*;
+import com.workintech.ecommerce.entity.Category;
 import com.workintech.ecommerce.entity.Product;
+import com.workintech.ecommerce.mapper.CategoryMapper;
 import com.workintech.ecommerce.mapper.ProductMapper;
+import com.workintech.ecommerce.service.CategoryService;
 import com.workintech.ecommerce.service.ProductService;
 import com.workintech.ecommerce.service.UserService;
 import jakarta.validation.Valid;
@@ -17,11 +18,13 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
     private final ProductService productService;
     private final UserService userService;
+    private final CategoryService categoryService;
 
     @Autowired
-    public AdminController(ProductService productService, UserService userService) {
+    public AdminController(ProductService productService, UserService userService, CategoryService categoryService) {
         this.productService = productService;
         this.userService = userService;
+        this.categoryService = categoryService;
     }
 
     // Ürün ekleme
@@ -36,6 +39,14 @@ public class AdminController {
     @PostMapping("/users/ban")
     public void banUser(@Valid @RequestBody UserBanRequestDto userBanRequestDto) {
         userService.banUser(userBanRequestDto.userId(), userBanRequestDto.reason());
+    }
+
+    // Category ekleme
+    @PostMapping("/category")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CategoryResponseDto createCategory(@Valid @RequestBody CategoryRequestDto categoryRequestDto) {
+        Category category = categoryService.save(CategoryMapper.categoryRequestDtoToCategory(categoryRequestDto));
+        return CategoryMapper.categoryToCategoryResponseDto(category);
     }
 
 }

@@ -31,13 +31,20 @@ public class Payment {
 
     @Column(nullable = false,name="amount")
     private Double amount;
-
+  //bidirectional
     @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "order_id", nullable = false, unique = true)
     private Order order;
 
-    @ManyToOne
+    //unidirectional
+    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinColumn(name = "credit_card_id")
     private CreditCard creditCard;
-
+   /*
+    @Override
+    public String toString() {
+        Long var10000 = this.getId();
+        return "Payment(id=" + var10000 + ", method=" + this.getMethod() + ", status=" + this.getStatus() + ", date=" + this.getDate() + ", amount=" + this.getAmount() + ", creditCard=" + this.getCreditCard() + ")";
+    }
+   */
 }

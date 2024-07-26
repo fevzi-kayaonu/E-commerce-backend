@@ -1,6 +1,7 @@
 package com.workintech.ecommerce.dto;
 
-import com.workintech.ecommerce.entity.*;
+import com.workintech.ecommerce.entity.Enum_Category;
+import com.workintech.ecommerce.entity.Enum_Gender;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -28,7 +29,7 @@ public record ProductRequestDto(
         Enum_Gender gender,
 
         @Valid
-        CategoryRequestDto categoryRequestDto,
+        Enum_Category category,
 
         @Size(min = 0, max = 10, message = "Image list must not be more than 10 ")
         List<@Valid ImageRequestDto> imageRequestDto

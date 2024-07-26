@@ -36,16 +36,7 @@ public class Address {
     @Column(nullable = false,name= "postal_code")
     private String postalCode;
 
-    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    @JoinTable(name="user_address",schema = "public",joinColumns = @JoinColumn(name="address_id"),inverseJoinColumns = @JoinColumn(name="user_id"))
-    private List<User> users;
-
-
-    public void addUser(User user){
-        if(users==null){
-            users = new ArrayList<>();
-        }
-        users.add(user);
-    }
+    @ManyToMany(mappedBy = "addresses", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private List<User> users = new ArrayList<>();
 
 }

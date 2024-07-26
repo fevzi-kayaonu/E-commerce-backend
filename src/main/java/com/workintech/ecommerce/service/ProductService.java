@@ -2,7 +2,6 @@ package com.workintech.ecommerce.service;
 
 import com.workintech.ecommerce.dto.ProductRequestDto;
 import com.workintech.ecommerce.entity.Product;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 

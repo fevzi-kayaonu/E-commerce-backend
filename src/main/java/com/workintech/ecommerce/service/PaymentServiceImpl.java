@@ -1,10 +1,10 @@
 package com.workintech.ecommerce.service;
 
-import com.workintech.ecommerce.dto.ProductRequestDto;
+import com.workintech.ecommerce.dto.PaymentRequestDto;
 import com.workintech.ecommerce.entity.Payment;
-import com.workintech.ecommerce.entity.Product;
+import com.workintech.ecommerce.mapper.PaymentMapper;
+import com.workintech.ecommerce.repository.CreditCardRepository;
 import com.workintech.ecommerce.repository.PaymentRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +14,12 @@ import java.util.List;
 public class PaymentServiceImpl implements PaymentService{
 
     private final PaymentRepository paymentRepository;
+    private final CreditCardRepository creditCardRepository;
 
     @Autowired
-    public PaymentServiceImpl(PaymentRepository paymentRepository) {
+    public PaymentServiceImpl(PaymentRepository paymentRepository, CreditCardRepository creditCardRepository) {
         this.paymentRepository = paymentRepository;
+        this.creditCardRepository = creditCardRepository;
     }
 
 
@@ -45,7 +47,12 @@ public class PaymentServiceImpl implements PaymentService{
         return payment;
     }
 
-    public Product createProduct(ProductRequestDto productRequestDto) {
-    return null;
+    @Override
+    public Payment addPayment(PaymentRequestDto paymentRequestDto){
+        Payment payment = PaymentMapper.paymentReqestDtoToPayment(paymentRequestDto);
+        payment.setCreditCard(creditCardRepository.findById(paymentRequestDto.creditCardId()).get());
+        return payment;
     }
+
+
 }

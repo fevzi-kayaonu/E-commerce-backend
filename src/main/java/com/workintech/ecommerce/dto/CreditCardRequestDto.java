@@ -15,12 +15,13 @@ public record CreditCardRequestDto(
         Integer expireMonth,
 
         @NotNull(message = "Expiration year cannot be null")
-        @Min(value = 2024, message = "Expiration year must be 2023 or later")//burayı otomatiğe bağlamamız gerek
+        @Min(value = 24, message = "Expiration year must be 2023 or later")//burayı otomatiğe bağlamamız gerek
+        @Max(value = 99, message = "Expiration year must be 2099 or before")//burayı otomatiğe bağlamamız gerek
         Integer expireYear,
 
 
-        @Digits(integer = 4, fraction = 0, message = "CCV must be a 3 or 4-digit number")// digits ve primivtive tip size kullanımları için araştırma yap
-        @Size(min = 3, max = 4, message = "CCV must be 3 or 4 digits")//databasede güncellenmesi gerekebilir
+        @Min(value = 100, message = "CCV must be a 3 or 4-digit number")
+        @Max(value = 9999, message = "CCV must be a 3 or 4-digit number")
         @NotNull(message = "CCV cannot be null")
         Integer ccv
         ) {
