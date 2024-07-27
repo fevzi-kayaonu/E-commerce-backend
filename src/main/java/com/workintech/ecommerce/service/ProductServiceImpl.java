@@ -54,6 +54,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
 
+   // @Transactional
     @Override
     public Product delete(Long id) {
         Product product = findById(id);
@@ -85,7 +86,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<Product> getByCategory(String name) {
+    public List<Product> getByCategory(Enum_Category name) {
         return productRepository.getByCategory(name).orElseThrow(() -> new ErrorException("Category not found :" + name, HttpStatus.NOT_FOUND));
     }
 
@@ -114,7 +115,6 @@ public class ProductServiceImpl implements ProductService{
        product.setCategory(category);
 
         category.addProduct(product);
-        System.out.println("girdim :" + product);
 
         product.setImages(productRequestDto.imageRequestDto().stream().map(item -> {
             Image image = new Image();

@@ -28,6 +28,11 @@ public class Role implements GrantedAuthority {
             fetch=FetchType.EAGER)
     private Set<User> users = new HashSet<>();
 
+    public User addUser(User user){
+        users.add(user);
+        return user;
+    }
+
     @Override
     public String getAuthority() {
         return role.toString();

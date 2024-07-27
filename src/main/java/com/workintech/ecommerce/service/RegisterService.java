@@ -8,6 +8,7 @@ import com.workintech.ecommerce.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RegisterService {
@@ -23,6 +24,7 @@ public class RegisterService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     public User register(String firstName, String lastName, String email, String password) {
         String encodePassword = passwordEncoder.encode(password);
         Role role = roleRepository.findByAuthority(Enum_Role.USER).orElseThrow(() -> new RuntimeException("Role not found"));
@@ -35,8 +37,8 @@ public class RegisterService {
         user.setAccountLocked(false);
         user.setEnabled(true);
         user.setRole(role);
-
-        return userRepository.save(user);
+       // role.addUser(user);
+        return  userRepository.save(user);
     }
 
 }

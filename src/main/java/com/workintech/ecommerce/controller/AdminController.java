@@ -53,4 +53,10 @@ public class AdminController {
         return CategoryMapper.categoryToCategoryResponseDto(category);
     }
 
+    @DeleteMapping("/product/{id}")
+    public ProductResponseDto removeProduct(@PathVariable Long id){
+       Product product = productService.delete(id);
+        return ProductMapper.productToProductResponseDto(product);
+    }
+
 }

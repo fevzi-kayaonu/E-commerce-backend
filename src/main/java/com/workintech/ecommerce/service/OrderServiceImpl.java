@@ -81,23 +81,19 @@ public class  OrderServiceImpl implements OrderService {
         order.setAddress(address);
         order.setUser(user);
         order.setProducts(productList);
-        order.setAmount(calculateTotalAmount(productList)); // Toplam tutarı hesapla
-        order.setStatus(orderRequestDto.status()); // Varsayılan bir durum belirleyin
-
-        // Siparişi ve ödemeyi oluştur
+        order.setAmount(calculateTotalAmount(productList));
+        order.setStatus(orderRequestDto.status());
         Payment payment = PaymentMapper.paymentReqestDtoToPayment(orderRequestDto.paymentRequestDto());
         payment.setOrder(order);
-        payment.setCreditCard(creditCard);// Ödemeyi siparişe bağla
-        order.setPayment(payment); // Siparişi ödemeye bağla
-
-        // Siparişi ve ödemeyi kaydet
+        payment.setCreditCard(creditCard);
+        order.setPayment(payment);
         user.addOrder(order);
-        return order; // Payment otomatik olarak kaydedilir
+        return  order;
     }
 
     private Double calculateTotalAmount(List<Product> products) {
         return products.stream()
-                .mapToDouble(Product::getPrice) // Ürün fiyatını toplar
+                .mapToDouble(Product::getPrice)
                 .sum();
     }
 
