@@ -54,7 +54,7 @@ class UserControllerTest {
         orderRequestDto = new OrderRequestDto(
                 1L,
                 Enum_OrderStatus.HAZIRLANIYOR,
-                null, // Assuming PaymentRequestDto can be null or set as needed
+                null,
                 List.of(1L)
         );
 
@@ -77,13 +77,13 @@ class UserControllerTest {
 
         orderResponseDto = new OrderResponseDto(
                 1L,
-                null, // Assuming this needs to be set or mocked
+                null,
                 Enum_OrderStatus.HAZIRLANIYOR,
                 addressResponseDto,
-                null, // Assuming UserResponseDto can be null or set as needed
+                null,
                 100.0,
-                null, // Assuming this needs to be set or mocked
-                null // Assuming this needs to be set or mocked
+                null,
+                null
         );
 
         addressResponseDto = new AddressResponseDto(
@@ -117,7 +117,7 @@ class UserControllerTest {
         assertNotNull(response);
         assertEquals(orderResponseDto, response);
         verify(orderService).addOrder(orderRequestDto, principal.getName());
-        verify(orderMapper).orderToOrderResponseDto(mockOrder); // Check if the mapper is called
+        verify(orderMapper).orderToOrderResponseDto(mockOrder);
     }
 
     @Test
@@ -131,7 +131,7 @@ class UserControllerTest {
         assertNotNull(response);
         assertEquals(addressResponseDto, response);
         verify(addressService).addAddress(addressRequestDto, principal.getName());
-        verify(addressMapper).addressToAddressResponseDto(mockAddress); // Check if the mapper is called
+        verify(addressMapper).addressToAddressResponseDto(mockAddress);
     }
 
     @Test
@@ -145,6 +145,6 @@ class UserControllerTest {
         assertNotNull(response);
         assertEquals(creditCardResponseDto, response);
         verify(creditCardService).addCreditCard(creditCardRequestDto, principal.getName());
-        verify(creditCardMapper).creditCardToCreditCardResponseDto(mockCreditCard); // Check if the mapper is called
+        verify(creditCardMapper).creditCardToCreditCardResponseDto(mockCreditCard);
     }
 }

@@ -99,8 +99,8 @@ public class ProductServiceImpl implements ProductService{
 
 
     @Override
-    public List<Product> getProducts(int offset, int count) {
-        Pageable pageable = PageRequest.of(offset, count);
+    public List<Product> getProducts(int offset, int limit) {
+        Pageable pageable = PageRequest.of(offset/limit, limit);
         return productRepository.findAll(pageable).getContent();
     }
 
@@ -127,8 +127,6 @@ public class ProductServiceImpl implements ProductService{
 // Burada image ları tek tek eklmek yerine productı doğrudan eklemeye çalıştığımda imeges tablosunda ki product_id
 // null olamaz hatası aldım çünkü product daha oluşturulmamıştı. (Product da id oluşturulurken bunu
 // generatedType ı SEQUENCE olsaydı bu sorun düzelirmiydi yoksa başka bir çözümü varmı)
-
-
 
         return product;
     }

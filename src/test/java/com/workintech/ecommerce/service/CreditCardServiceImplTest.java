@@ -5,14 +5,11 @@ import com.workintech.ecommerce.entity.CreditCard;
 import com.workintech.ecommerce.entity.User;
 import com.workintech.ecommerce.exceptions.ErrorException;
 import com.workintech.ecommerce.repository.CreditCardRepository;
-import com.workintech.ecommerce.service.CreditCardServiceImpl;
-import com.workintech.ecommerce.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
@@ -40,7 +37,6 @@ class CreditCardServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        // MockitoAnnotations.openMocks(this) gerekli değil çünkü @ExtendWith(MockitoExtension.class) kullanılıyor
         creditCard = new CreditCard();
         creditCard.setId(1L);
         creditCard.setNo("1234567812345678");
@@ -101,17 +97,13 @@ class CreditCardServiceImplTest {
 
     @Test
     void delete() {
-        // Mock setup for findById
         when(creditCardRepository.findById(1L)).thenReturn(Optional.of(creditCard));
 
-        // Perform the delete operation
         CreditCard deletedCreditCard = creditCardService.delete(1L);
 
-        // Verify the results
         assertNotNull(deletedCreditCard);
         assertEquals("1234567812345678", deletedCreditCard.getNo());
 
-        // Verify that delete was called exactly once
         verify(creditCardRepository, times(1)).delete(creditCard);
     }
 

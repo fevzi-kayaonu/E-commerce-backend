@@ -40,7 +40,7 @@ public class WelcomeControllerTest {
 
     @BeforeEach
     void setUp() {
-        // Test ürünleri oluşturuluyor
+
         product1 = new Product();
         product1.setId(1L);
         product1.setName("newBalance");

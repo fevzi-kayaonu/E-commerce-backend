@@ -49,8 +49,8 @@ public class WelcomeController {
     @GetMapping("/")
     public List<ProductResponseDto> getProducts(
             @RequestParam(defaultValue = "0") int offset,
-            @RequestParam(defaultValue = "10") int count) {
-        List<Product> products = productService.getProducts(offset, count);
+            @RequestParam(defaultValue = "10") int limit) {
+        List<Product> products = productService.getProducts(offset, limit);
         return products.stream().map(ProductMapper::productToProductResponseDto).toList();
     }
 
@@ -58,9 +58,9 @@ public class WelcomeController {
     List<ProductResponseDto> getByCategoryAndGender(@RequestParam Enum_Category name,
                                           @RequestParam Enum_Gender gender,
                                           @RequestParam(defaultValue = "0")  int offset,
-                                          @RequestParam(defaultValue = "10")  int count){
+                                          @RequestParam(defaultValue = "10")  int limit){
 
-        List<Product> products = productService.getByCategoryAndGender(name,gender,offset,count);
+        List<Product> products = productService.getByCategoryAndGender(name,gender,offset,limit);
         return products.stream().map(ProductMapper::productToProductResponseDto).toList();
     }
 

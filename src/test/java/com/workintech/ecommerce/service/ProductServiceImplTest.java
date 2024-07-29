@@ -35,7 +35,7 @@ class ProductServiceImplTest {
     private ProductService productService;
 
     @Autowired
-    private CategoryRepository categoryRepository; // Ensure you have a CategoryRepository for category operations
+    private CategoryRepository categoryRepository;
 
     private Product product1;
     private Product product2;

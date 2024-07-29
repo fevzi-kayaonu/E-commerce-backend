@@ -22,10 +22,8 @@ class RoleRepositoryTest {
     @DisplayName("Can find Authority by name")
     @Test
     void findByAuthority() {
-        // Arrange & Act
         Optional<Role> foundRole = roleRepository.findByAuthority(Enum_Role.USER);
 
-        // Assert
         assertThat(foundRole).isPresent();
         assertThat(foundRole.get().getRole()).isEqualTo(Enum_Role.USER);
     }
