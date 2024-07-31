@@ -1,5 +1,6 @@
 package com.workintech.ecommerce.controller;
 
+import com.workintech.ecommerce.dto.*;
 import com.workintech.ecommerce.entity.Address;
 import com.workintech.ecommerce.entity.CreditCard;
 import com.workintech.ecommerce.entity.Order;
@@ -9,17 +10,12 @@ import com.workintech.ecommerce.mapper.OrderMapper;
 import com.workintech.ecommerce.service.AddressService;
 import com.workintech.ecommerce.service.CreditCardService;
 import com.workintech.ecommerce.service.OrderService;
-import com.workintech.ecommerce.dto.AddressRequestDto;
-import com.workintech.ecommerce.dto.AddressResponseDto;
-import com.workintech.ecommerce.dto.CreditCardRequestDto;
-import com.workintech.ecommerce.dto.CreditCardResponseDto;
-import com.workintech.ecommerce.dto.OrderRequestDto;
-import com.workintech.ecommerce.dto.OrderResponseDto;
 
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -61,6 +57,5 @@ public class UserController {
         CreditCard creditCard = creditCardService.addCreditCard(creditCardRequestDto, user_mail);
         return CreditCardMapper.creditCardToCreditCardResponseDto(creditCard);
     }
-
 }
 

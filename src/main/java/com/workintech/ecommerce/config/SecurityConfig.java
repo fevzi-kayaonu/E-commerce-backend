@@ -21,6 +21,15 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
 
+    private final CustomAuthenticationSuccessHandler successHandler;
+    private final CustomAuthenticationFailureHandler failureHandler;
+
+
+    public SecurityConfig(CustomAuthenticationSuccessHandler successHandler, CustomAuthenticationFailureHandler failureHandler) {
+        this.successHandler = successHandler;
+        this.failureHandler = failureHandler;
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
@@ -57,7 +66,10 @@ public class SecurityConfig {
                     auth.requestMatchers("/user/**").hasAnyAuthority("USER", "ADMİN");
                     auth.anyRequest().authenticated();
         })
-                    .formLogin(Customizer.withDefaults())
+                .formLogin(form -> form
+                        .successHandler(successHandler)
+                        .failureHandler(failureHandler)
+                )
                     .httpBasic(Customizer.withDefaults()).cors(cors -> cors.configurationSource(corsConfigurationSource())).build();
     }
 }
