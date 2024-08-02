@@ -6,20 +6,17 @@ import com.workintech.ecommerce.entity.Order;
 
 public class OrderMapper {
 
-    public static Order orderRequestDtoToOrder(OrderRequestDto orderRequestDto){
+    public static Order orderRequestDtoToOrder(OrderRequestDto orderRequestDto) {
         Order order = new Order();
-
-      //  order.setProducts(orderRequestDto.productRequestDtos().stream().map(ProductMapper::productRequestDtoToProduct).toList());
-      //  order.setAddress(AddressMapper.addressRequestDtoToAddress(orderRequestDto.addressRequestDto()));
         order.setPayment(PaymentMapper.paymentReqestDtoToPayment(orderRequestDto.paymentRequestDto()));
         return order;
     }
 
-    public static OrderResponseDto orderToOrderResponseDto(Order order){
-        return new OrderResponseDto(order.getId(), order.getDate(),order.getStatus(),
-                                    AddressMapper.addressToAddressResponseDto(order.getAddress()),UserMapper.userToUserResponseDto(order.getUser()),
-                                    order.getAmount(), order.getProducts().stream().map(ProductMapper::productToProductResponseDto).toList(),
-                                    PaymentMapper.paymentToPaymentResponseDto(order.getPayment()));
+    public static OrderResponseDto orderToOrderResponseDto(Order order) {
+        return new OrderResponseDto(order.getId(), order.getDate(), order.getStatus(),
+                AddressMapper.addressToAddressResponseDto(order.getAddress()), UserMapper.userToUserResponseDto(order.getUser()),
+                order.getAmount(), order.getProducts().stream().map(ProductMapper::productToProductResponseDto).toList(),
+                PaymentMapper.paymentToPaymentResponseDto(order.getPayment()));
     }
 
 }

@@ -57,7 +57,7 @@ public class User implements UserDetails {
 
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "user_address", schema = "public", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "address_id"))
-    private List<Address> addresses = new ArrayList<>(); // hard dependency yaparasak 74. saıra gerek kalmıyor bize ne dezavantajı var burasda direk hardepencdency yapmanın
+    private List<Address> addresses = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Review> reviews = new LinkedHashSet<>();
@@ -65,19 +65,19 @@ public class User implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Order> orders = new HashSet<>();
 
-    public void addOrder(Order order){
+    public void addOrder(Order order) {
         orders.add(order);
     }
 
-    public void addReviews(Review review){
+    public void addReviews(Review review) {
         reviews.add(review);
     }
 
-    public void addAddress(Address address){
+    public void addAddress(Address address) {
         addresses.add(address);
     }
 
-    public void addCreditCard(CreditCard creditCard){
+    public void addCreditCard(CreditCard creditCard) {
         creditCards.add(creditCard);
         creditCard.addUser(this);
     }
@@ -113,6 +113,80 @@ public class User implements UserDetails {
     public boolean isEnabled() {
 
         return Boolean.TRUE.equals(enabled);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof User)) {
+            return false;
+        }
+        User other = (User) o;
+        if (!other.canEqual(this)) {
+            return false;
+        }
+
+        Object this$id = this.getId();
+        Object other$id = other.getId();
+        if (this$id == null ? other$id != null : !this$id.equals(other$id)) {
+            return false;
+        }
+
+        Object this$accountLocked = this.getAccountLocked();
+        Object other$accountLocked = other.getAccountLocked();
+        if (this$accountLocked == null ? other$accountLocked != null : !this$accountLocked.equals(other$accountLocked)) {
+            return false;
+        }
+
+        Object this$enabled = this.getEnabled();
+        Object other$enabled = other.getEnabled();
+        if (this$enabled == null ? other$enabled != null : !this$enabled.equals(other$enabled)) {
+            return false;
+        }
+
+        Object this$firstName = this.getFirstName();
+        Object other$firstName = other.getFirstName();
+        if (this$firstName == null ? other$firstName != null : !this$firstName.equals(other$firstName)) {
+            return false;
+        }
+
+        Object this$lastName = this.getLastName();
+        Object other$lastName = other.getLastName();
+        if (this$lastName == null ? other$lastName != null : !this$lastName.equals(other$lastName)) {
+            return false;
+        }
+
+        Object this$email = this.getEmail();
+        Object other$email = other.getEmail();
+        if (this$email == null ? other$email != null : !this$email.equals(other$email)) {
+            return false;
+        }
+
+        Object this$password = this.getPassword();
+        Object other$password = other.getPassword();
+        if (this$password == null ? other$password != null : !this$password.equals(other$password)) {
+            return false;
+        }
+
+        Object this$accountExpirationDate = this.getAccountExpirationDate();
+        Object other$accountExpirationDate = other.getAccountExpirationDate();
+        if (this$accountExpirationDate == null ? other$accountExpirationDate != null : !this$accountExpirationDate.equals(other$accountExpirationDate)) {
+            return false;
+        }
+
+        Object this$credentialsExpirationDate = this.getCredentialsExpirationDate();
+        Object other$credentialsExpirationDate = other.getCredentialsExpirationDate();
+        if (this$credentialsExpirationDate == null ? other$credentialsExpirationDate != null : !this$credentialsExpirationDate.equals(other$credentialsExpirationDate)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected boolean canEqual(final Object other) {
+        return other instanceof User;
     }
 
     @Override

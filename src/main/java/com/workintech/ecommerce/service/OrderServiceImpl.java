@@ -21,14 +21,13 @@ import java.util.Optional;
 
 
 @Service
-public class  OrderServiceImpl implements OrderService {
+public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final UserService userService;
     private final ProductService productService;
     private final AddressService addressService;
     private final CreditCardService creditCardService;
-
 
 
     @Autowired
@@ -50,6 +49,7 @@ public class  OrderServiceImpl implements OrderService {
     public Order findById(Long id) {
         return orderRepository.findById(id).orElseThrow(() -> new ErrorException("Order not found", HttpStatus.NOT_FOUND));
     }
+
     @Override
     public Order save(Order order) {
         return orderRepository.save(order);
@@ -64,19 +64,16 @@ public class  OrderServiceImpl implements OrderService {
 
     @Transactional
     public Order addOrder(OrderRequestDto orderRequestDto, String user_mail) {
-        // credit cart bul
+
         CreditCard creditCard = creditCardService.findById((orderRequestDto.paymentRequestDto().creditCardId()));
-        // Adresi bul
         Address address = addressService.findById(orderRequestDto.addressId());
-        // Kullanıcıyı bul
         User user = userService.findByEmail(user_mail);
-        // Ürünleri bul
+
         List<Product> productList = orderRequestDto.productIdList().stream()
                 .map(productService::findById
-                        )
+                )
                 .toList();
 
-        // Yeni siparişi oluştur
         Order order = OrderMapper.orderRequestDtoToOrder(orderRequestDto);
         order.setAddress(address);
         order.setUser(user);
@@ -88,7 +85,7 @@ public class  OrderServiceImpl implements OrderService {
         payment.setCreditCard(creditCard);
         order.setPayment(payment);
         user.addOrder(order);
-        return  order;
+        return order;
     }
 
     private Double calculateTotalAmount(List<Product> products) {

@@ -4,7 +4,7 @@ import com.workintech.ecommerce.entity.Enum_PaymentMethod;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-public record PaymentRequestDto (
+public record PaymentRequestDto(
         @NotNull(message = "Payment method name cannot be null")
         Enum_PaymentMethod method,
 

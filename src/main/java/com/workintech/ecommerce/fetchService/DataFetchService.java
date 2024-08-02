@@ -42,7 +42,7 @@ public class DataFetchService {
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             int statusCode = response.statusCode();
-            if (statusCode == 200) { // HTTP 200 OK
+            if (statusCode == 200) {
                 String responseBody = response.body();
                 return responseBody;
             } else {

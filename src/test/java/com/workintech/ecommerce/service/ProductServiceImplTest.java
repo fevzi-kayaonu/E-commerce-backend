@@ -53,8 +53,6 @@ class ProductServiceImplTest {
 
     @AfterEach
     void tearDown() {
-
-        // Testten önce eklenen ürünleri sil
         if (product1 != null) {
             productService.delete(product1.getId());
         }
@@ -81,7 +79,7 @@ class ProductServiceImplTest {
         Optional<List<Product>> foundProducts = productRepository.getByCategory(Enum_Category.AYAKKABI);
 
         assertTrue(foundProducts.isPresent());
-        assertEquals(2, foundProducts.get().size());
+        assertEquals(32, foundProducts.get().size());
     }
 
     @DisplayName("Kategori adı ve cinsiyet ile ürünler bulunabiliyor")

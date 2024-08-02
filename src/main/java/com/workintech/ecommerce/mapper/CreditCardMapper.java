@@ -6,8 +6,8 @@ import com.workintech.ecommerce.entity.CreditCard;
 
 public class CreditCardMapper {
 
-    public static CreditCard creditCardRequestDtoCreditCard(CreditCardRequestDto creditCardRequestDto){
-        CreditCard creditCard =new CreditCard();
+    public static CreditCard creditCardRequestDtoCreditCard(CreditCardRequestDto creditCardRequestDto) {
+        CreditCard creditCard = new CreditCard();
         creditCard.setNo(creditCardRequestDto.no());
         creditCard.setCcv(creditCardRequestDto.ccv());
         creditCard.setName(creditCardRequestDto.name());
@@ -16,8 +16,8 @@ public class CreditCardMapper {
         return creditCard;
     }
 
-    public static CreditCardResponseDto creditCardToCreditCardResponseDto(CreditCard creditCard){
-        return new CreditCardResponseDto(creditCard.getId(),creditCard.getNo(),creditCard.getName(),creditCard.getExpireMonth(),creditCard.getExpireYear(),creditCard.getCcv());
+    public static CreditCardResponseDto creditCardToCreditCardResponseDto(CreditCard creditCard) {
+        return new CreditCardResponseDto(creditCard.getId(), creditCard.getNo(), creditCard.getName(), creditCard.getExpireMonth(), creditCard.getExpireYear(), creditCard.getCcv());
     }
 
 }

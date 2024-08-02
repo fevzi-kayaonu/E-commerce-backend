@@ -25,16 +25,9 @@ public class AuthController {
         this.userService = userService;
     }
 
-
-    //kayıt olabilmeli
     @PostMapping("/register")
-    public UserResponseDto register(@Valid @RequestBody UserRegisterRequestDto userRegisterRequestDto){
-         return UserMapper.userToUserResponseDto(registerService.register(userRegisterRequestDto.firstName(),userRegisterRequestDto.lastName(),
-                                                 userRegisterRequestDto.email(),userRegisterRequestDto.password()));
+    public UserResponseDto register(@Valid @RequestBody UserRegisterRequestDto userRegisterRequestDto) {
+        return UserMapper.userToUserResponseDto(registerService.register(userRegisterRequestDto.firstName(), userRegisterRequestDto.lastName(),
+                userRegisterRequestDto.email(), userRegisterRequestDto.password()));
     }
-
-
-    //login endpointini kendim yazarsam otantikeyt isteyen endpointlere istek atrarken
-    // her seferinde benim yazıdğım /login endpointine gelip mi otantikeyti kontrol edecek ya da spring security kendi içerisinde mi yapıcak
-
 }

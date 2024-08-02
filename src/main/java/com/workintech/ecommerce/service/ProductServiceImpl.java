@@ -21,12 +21,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ProductServiceImpl implements ProductService{
-    //Bir servise birden fazla reposiroty inject edersem yan eksisi olur mu , (daha fazla repository eklersem daha basit jpql lerle işleri çözebiliyorum)
+public class ProductServiceImpl implements ProductService {
+
     private final ProductRepository productRepository;
     private final ImageService imageService;
     private final CategoryService categoryService;
-
 
 
     @Autowired
@@ -54,7 +53,6 @@ public class ProductServiceImpl implements ProductService{
     }
 
 
-   // @Transactional
     @Override
     public Product delete(Long id) {
         Product product = findById(id);
@@ -64,11 +62,6 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public List<Product> getPriceDesc() {
-        /* Bu algoritmaları jpql ile mi yapmak doğru olur ya da bu şekilde mi daha doğru olur
-        return findAll().stream()
-                .sorted((p1, p2) -> Double.compare(p2.getPrice(), p1.getPrice()))
-                .collect(Collectors.toList());
-         */
         Sort sort = Sort.by(Sort.Order.desc("price"));
         return productRepository.findAll(sort);
 
@@ -97,10 +90,9 @@ public class ProductServiceImpl implements ProductService{
     }
 
 
-
     @Override
     public List<Product> getProducts(int offset, int limit) {
-        Pageable pageable = PageRequest.of(offset/limit, limit);
+        Pageable pageable = PageRequest.of(offset / limit, limit);
         return productRepository.findAll(pageable).getContent();
     }
 
@@ -112,7 +104,7 @@ public class ProductServiceImpl implements ProductService{
 
         Category category = categoryService.getByName(productRequestDto.category());
 
-       product.setCategory(category);
+        product.setCategory(category);
 
         category.addProduct(product);
 
@@ -122,11 +114,6 @@ public class ProductServiceImpl implements ProductService{
             image.setUrl(item.url());
             return imageService.save(image);
         }).toList());
-
-
-// Burada image ları tek tek eklmek yerine productı doğrudan eklemeye çalıştığımda imeges tablosunda ki product_id
-// null olamaz hatası aldım çünkü product daha oluşturulmamıştı. (Product da id oluşturulurken bunu
-// generatedType ı SEQUENCE olsaydı bu sorun düzelirmiydi yoksa başka bir çözümü varmı)
 
         return product;
     }

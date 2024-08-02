@@ -5,5 +5,4 @@ public enum Enum_OrderStatus {
     KARGODA,
     ALINDI,
     İPTAL
-
 }

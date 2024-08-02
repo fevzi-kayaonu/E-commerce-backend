@@ -5,6 +5,5 @@ public record ReviewResponseDto(
         String userFirstName,
         String userLastName,
         String message
-
 ) {
 }

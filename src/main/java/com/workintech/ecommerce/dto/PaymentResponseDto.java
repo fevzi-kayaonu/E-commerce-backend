@@ -7,15 +7,10 @@ import java.time.Instant;
 
 public record PaymentResponseDto(
         Long id,
-
         Enum_PaymentMethod method,
-
         Enum_PaymentStatus status,
-
         Instant date,
-
         Double amount,
-
         CreditCardResponseDto creditCardResponseDto
 ) {
 }

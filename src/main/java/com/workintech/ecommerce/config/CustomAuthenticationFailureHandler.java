@@ -8,6 +8,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+
 @Component
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
@@ -21,27 +22,10 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
         response.setContentType("application/json");
 
         String jsonResponse = objectMapper.writeValueAsString(
-                new ErrorResponse("Authentication failed", exception.getMessage())
+                new AuthenticationResponse("Authentication failed", exception.getMessage())
         );
 
         response.getWriter().write(jsonResponse);
     }
 
-    private static class ErrorResponse {
-        private final String message;
-        private final String error;
-
-        public ErrorResponse(String message, String error) {
-            this.message = message;
-            this.error = error;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public String getError() {
-            return error;
-        }
-    }
 }

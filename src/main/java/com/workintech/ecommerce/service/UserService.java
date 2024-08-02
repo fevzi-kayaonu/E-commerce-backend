@@ -21,7 +21,7 @@ public class UserService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
-    User findByEmail(String email){
+    public User findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
     }
@@ -35,12 +35,10 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findById(userBanRequestDto.userId())
                 .orElseThrow(() -> new ErrorException("User not found with id: " + userBanRequestDto.userId(), HttpStatus.NOT_FOUND));
 
-        // Kullanıcıyı banlama işlemi
-        user.setAccountLocked(true); // Kullanıcıyı kilitle
-        user.setEnabled(false); // Kullanıcıyı devre dışı bırak
-        // Ban sebebini kaydetmek için ek bir alan varsa, burada güncelleyebilirsiniz.
+        user.setAccountLocked(true);
+        user.setEnabled(false);
 
-       return userRepository.save(user); // Güncellenmiş kullanıcıyı kaydet
+        return userRepository.save(user);
     }
 
 

@@ -1,14 +1,10 @@
 package com.workintech.ecommerce.entity;
 
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -18,23 +14,21 @@ import java.util.Set;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private Long id;
 
-    @Column(nullable = false, length = 45,name="name")
+    @Column(nullable = false, length = 45, name = "name")
     @Enumerated(EnumType.STRING)
     private Enum_Category name;
 
-    @Column(nullable = false,name="description")
+    @Column(nullable = false, name = "description")
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "category")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
     private Set<Product> products = new HashSet<>();
 
-    public void addProduct(Product product){
+    public void addProduct(Product product) {
         products.add(product);
     }
-
-    // StackOverFlow hatasından dolayı toStringi ezmek zorunda kaldım bunu başka bir çözümü varmı. Spring toStringi nerede neden çağrıyor ve ne işe yarıyor.
 
 }

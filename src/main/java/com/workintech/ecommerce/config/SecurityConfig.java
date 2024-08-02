@@ -31,7 +31,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -44,7 +44,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource(){
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
@@ -65,11 +65,11 @@ public class SecurityConfig {
                     auth.requestMatchers("/admin/**").hasAuthority("ADMİN");
                     auth.requestMatchers("/user/**").hasAnyAuthority("USER", "ADMİN");
                     auth.anyRequest().authenticated();
-        })
+                })
                 .formLogin(form -> form
                         .successHandler(successHandler)
                         .failureHandler(failureHandler)
                 )
-                    .httpBasic(Customizer.withDefaults()).cors(cors -> cors.configurationSource(corsConfigurationSource())).build();
+                .httpBasic(Customizer.withDefaults()).cors(cors -> cors.configurationSource(corsConfigurationSource())).build();
     }
 }

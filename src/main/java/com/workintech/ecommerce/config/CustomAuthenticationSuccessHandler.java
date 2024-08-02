@@ -8,6 +8,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
@@ -20,27 +21,10 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         response.setContentType("application/json");
 
         String jsonResponse = objectMapper.writeValueAsString(
-                new SuccessResponse("Authentication successful", authentication.getName())
+                new AuthenticationResponse("Authentication successful", authentication.getName())
         );
 
         response.getWriter().write(jsonResponse);
     }
 
-    private static class SuccessResponse {
-        private final String message;
-        private final String username;
-
-        public SuccessResponse(String message, String username) {
-            this.message = message;
-            this.username = username;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-    }
 }

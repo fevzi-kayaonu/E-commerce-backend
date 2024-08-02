@@ -16,8 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CreditCardServiceImpl implements CreditCardService{
-
+public class CreditCardServiceImpl implements CreditCardService {
 
     private final CreditCardRepository creditCardRepository;
     private final UserService userService;
@@ -58,13 +57,12 @@ public class CreditCardServiceImpl implements CreditCardService{
     public CreditCard addCreditCard(CreditCardRequestDto creditCardRequestDto, String user_mail) {
         User user = userService.findByEmail(user_mail);
 
-            CreditCard creditCard = CreditCardMapper.creditCardRequestDtoCreditCard(creditCardRequestDto);
-           // creditCard.addUser(user.get());
-            user.addCreditCard(creditCard);
-            // userRepository.save(user.get());
-            return creditCard;
+        CreditCard creditCard = CreditCardMapper.creditCardRequestDtoCreditCard(creditCardRequestDto);
 
-        //throw new RuntimeException("Credit Card not found");
+        user.addCreditCard(creditCard);
+
+        return creditCard;
+
     }
 
 }

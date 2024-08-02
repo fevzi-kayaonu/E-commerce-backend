@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 
-
 public record AddressRequestDto(
         @NotBlank(message = "Description cannot be blank")
         String description,

@@ -2,8 +2,8 @@ package com.workintech.ecommerce.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import jakarta.persistence.*;
+
 import java.time.Instant;
 import java.util.*;
 
@@ -15,44 +15,110 @@ import java.util.*;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private Long id;
 
-    @Column(nullable = false, length = 45,name="name")
+    @Column(nullable = false, length = 45, name = "name")
     private String name;
 
-    @Column(nullable = false,name="description")
+    @Column(nullable = false, name = "description")
     private String description;
 
-    @Column(nullable = false,name="price")
+    @Column(nullable = false, name = "price")
     private Double price;
 
-    @Column(nullable = false,name="rating")
+    @Column(nullable = false, name = "rating")
     private Double rating;
 
-    @Column(nullable = false,name="stock_quantity")
+    @Column(nullable = false, name = "stock_quantity")
     private Integer stockQuantity;
 
-    @Column(nullable = false, length = 20,name="gender")
+    @Column(nullable = false, length = 20, name = "gender")
     @Enumerated(EnumType.STRING)
-    private Enum_Gender gender ;
+    private Enum_Gender gender;
 
-    @Column(nullable = false, updatable = false,name="created_at")
+    @Column(nullable = false, updatable = false, name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Instant createdAt = Instant.now();
 
-    // Product oluşturulurken category yi savelememe rağmen neden category oluşturup save edip category id sine ulaşıyor.
-    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "category_id", nullable = false)
-    private Category category; // ManyToMany de proje run edildiğinde component direk oluşturuluyor, oneTomany de neden oluşturulmuyor Lazy olarak bırakıyoruz ?
+    private Category category;
 
-    // product oluşturulurken içerisine imagesleri yolladığım zaman images tablosundaki product_id null olamaz hatası aldım
-    // 45. satırda böyle bit hata almıyorum
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "product")
-    private List<Image> images = new ArrayList<>(); // bunları hep List olarak tutuyorum Set olarak mı tutmalıyım , ayrımı nedir. JpaRepositorydeki metodlarda List döndürüyuor
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    private List<Image> images = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "product")
-    private Set<Review> reviews = new  LinkedHashSet<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    private Set<Review> reviews = new LinkedHashSet<>();
+
+    @Override
+    public boolean equals(final Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof Product)) {
+            return false;
+        }
+        Product other = (Product) o;
+        if (!other.canEqual(this)) {
+            return false;
+        }
+
+        Object this$id = this.getId();
+        Object other$id = other.getId();
+        if (this$id == null ? other$id != null : !this$id.equals(other$id)) {
+            return false;
+        }
+
+        Object this$price = this.getPrice();
+        Object other$price = other.getPrice();
+        if (this$price == null ? other$price != null : !this$price.equals(other$price)) {
+            return false;
+        }
+
+        Object this$rating = this.getRating();
+        Object other$rating = other.getRating();
+        if (this$rating == null ? other$rating != null : !this$rating.equals(other$rating)) {
+            return false;
+        }
+
+        Object this$stockQuantity = this.getStockQuantity();
+        Object other$stockQuantity = other.getStockQuantity();
+        if (this$stockQuantity == null ? other$stockQuantity != null : !this$stockQuantity.equals(other$stockQuantity)) {
+            return false;
+        }
+
+        Object this$name = this.getName();
+        Object other$name = other.getName();
+        if (this$name == null ? other$name != null : !this$name.equals(other$name)) {
+            return false;
+        }
+
+        Object this$description = this.getDescription();
+        Object other$description = other.getDescription();
+        if (this$description == null ? other$description != null : !this$description.equals(other$description)) {
+            return false;
+        }
+
+        Object this$gender = this.getGender();
+        Object other$gender = other.getGender();
+        if (this$gender == null ? other$gender != null : !this$gender.equals(other$gender)) {
+            return false;
+        }
+
+        Object this$createdAt = this.getCreatedAt();
+        Object other$createdAt = other.getCreatedAt();
+        if (this$createdAt == null ? other$createdAt != null : !this$createdAt.equals(other$createdAt)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected boolean canEqual(final Object other) {
+        return other instanceof Product;
+    }
+
 
     @Override
     public int hashCode() {
@@ -80,9 +146,7 @@ public class Product {
     @Override
     public String toString() {
         Long var10000 = this.getId();
-        return "Product(id=" + var10000 + ", name=" + this.getName() + ", description=" + this.getDescription() + ", price=" + this.getPrice() + ", rating=" + this.getRating() + ", stockQuantity=" + this.getStockQuantity() + ", gender=" + this.getGender() + ", createdAt=" + this.getCreatedAt() +")";
+        return "Product(id=" + var10000 + ", name=" + this.getName() + ", description=" + this.getDescription() + ", price=" + this.getPrice() + ", rating=" + this.getRating() + ", stockQuantity=" + this.getStockQuantity() + ", gender=" + this.getGender() + ", createdAt=" + this.getCreatedAt() + ")";
     }
-
-
 
 }

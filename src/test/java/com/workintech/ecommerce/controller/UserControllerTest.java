@@ -11,6 +11,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.security.Principal;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,22 +29,13 @@ class UserControllerTest {
     @Mock
     private CreditCardService creditCardService;
 
-    @Mock
-    private OrderMapper orderMapper;
-
-    @Mock
-    private AddressMapper addressMapper;
-
-    @Mock
-    private CreditCardMapper creditCardMapper;
-
     @InjectMocks
     private UserController userController;
 
     private OrderRequestDto orderRequestDto;
     private AddressRequestDto addressRequestDto;
     private CreditCardRequestDto creditCardRequestDto;
-
+    private PaymentRequestDto paymentRequestDto;
     private OrderResponseDto orderResponseDto;
     private AddressResponseDto addressResponseDto;
     private CreditCardResponseDto creditCardResponseDto;
@@ -50,11 +43,20 @@ class UserControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        creditCardRequestDto = new CreditCardRequestDto(
+                "1234567812345678",
+                "John Doe",
+                12,
+                24,
+                123
+        );
+
+
 
         orderRequestDto = new OrderRequestDto(
                 1L,
                 Enum_OrderStatus.HAZIRLANIYOR,
-                null,
+                paymentRequestDto,
                 List.of(1L)
         );
 
@@ -67,24 +69,7 @@ class UserControllerTest {
                 "12345"
         );
 
-        creditCardRequestDto = new CreditCardRequestDto(
-                "1234567812345678",
-                "John Doe",
-                12,
-                24,
-                123
-        );
 
-        orderResponseDto = new OrderResponseDto(
-                1L,
-                null,
-                Enum_OrderStatus.HAZIRLANIYOR,
-                addressResponseDto,
-                null,
-                100.0,
-                null,
-                null
-        );
 
         addressResponseDto = new AddressResponseDto(
                 1L,
@@ -104,47 +89,116 @@ class UserControllerTest {
                 24,
                 123
         );
+
+        orderResponseDto = new OrderResponseDto(
+                1L,
+                null,
+                Enum_OrderStatus.HAZIRLANIYOR,
+                addressResponseDto,
+                null,
+                100.0,
+                null,
+                null
+        );
     }
 
     @Test
     void saveOrder() {
         Principal principal = () -> "john.doe@example.com";
+
+        User mockUser = new User();
+        mockUser.setFirstName("John");
+        mockUser.setLastName("Doe");
+
+        Address mockAddress = new Address();
+        mockAddress.setId(1L);
+
+        CreditCard mockCreditCard = new CreditCard();
+        mockCreditCard.setId(1L);
+
+        Payment mockPayment = new Payment();
+        mockPayment.setId(1L);
+        mockPayment.setMethod(Enum_PaymentMethod.KART);
+        mockPayment.setAmount(10.99);
+        mockPayment.setCreditCard(mockCreditCard);
+
         Order mockOrder = new Order();
-        when(orderService.addOrder(orderRequestDto, principal.getName())).thenReturn(mockOrder);
-        when(orderMapper.orderToOrderResponseDto(mockOrder)).thenReturn(orderResponseDto);
+        mockOrder.setId(1L);
+        mockOrder.setAddress(mockAddress);
+        mockOrder.setUser(mockUser);
+        mockOrder.setPayment(mockPayment);
+
+
+        when(orderService.addOrder(any(OrderRequestDto.class), eq(principal.getName()))).thenReturn(mockOrder);
+        when(creditCardService.findById(anyLong())).thenReturn(mockCreditCard);
+
+
+        AddressResponseDto mockAddressResponseDto = AddressMapper.addressToAddressResponseDto(mockAddress);
+        UserResponseDto mockUserResponseDto = UserMapper.userToUserResponseDto(mockUser);
+        PaymentResponseDto mockPaymentResponseDto = PaymentMapper.paymentToPaymentResponseDto(mockPayment);
+
+
+        Instant now = Instant.now();
+        OrderResponseDto expectedResponse = new OrderResponseDto(
+                mockOrder.getId(),
+                now,
+                mockOrder.getStatus(),
+                mockAddressResponseDto,
+                mockUserResponseDto,
+                mockOrder.getAmount(),
+                null,
+                mockPaymentResponseDto
+        );
 
         OrderResponseDto response = userController.saveOrder(orderRequestDto, principal);
+
         assertNotNull(response);
-        assertEquals(orderResponseDto, response);
+
+        assertTrue(ChronoUnit.SECONDS.between(response.date(), now) < 1,
+                "The date difference is too large");
+
+        assertEquals(expectedResponse.id(), response.id());
+        assertEquals(expectedResponse.status(), response.status());
+        assertEquals(expectedResponse.addressResponseDto(), response.addressResponseDto());
+        assertEquals(expectedResponse.userResponseDto(), response.userResponseDto());
+        assertEquals(expectedResponse.amount(), response.amount());
+        assertEquals(expectedResponse.paymentResponseDto(), response.paymentResponseDto());
+
         verify(orderService).addOrder(orderRequestDto, principal.getName());
-        verify(orderMapper).orderToOrderResponseDto(mockOrder);
     }
 
     @Test
     void saveAddress() {
-        Principal principal = () -> "john.doe@example.com";
+        Principal principal = mock(Principal.class);
+        when(principal.getName()).thenReturn("john.doe@example.com");
+
         Address mockAddress = new Address();
+        mockAddress.setId(1L);
         when(addressService.addAddress(addressRequestDto, principal.getName())).thenReturn(mockAddress);
-        when(addressMapper.addressToAddressResponseDto(mockAddress)).thenReturn(addressResponseDto);
+
+        AddressResponseDto expectedResponse = AddressMapper.addressToAddressResponseDto(mockAddress);
 
         AddressResponseDto response = userController.saveAddress(addressRequestDto, principal);
         assertNotNull(response);
-        assertEquals(addressResponseDto, response);
+        assertEquals(expectedResponse, response);
         verify(addressService).addAddress(addressRequestDto, principal.getName());
-        verify(addressMapper).addressToAddressResponseDto(mockAddress);
+
     }
 
     @Test
     void saveCreditCard() {
-        Principal principal = () -> "john.doe@example.com";
+        Principal principal = mock(Principal.class);
+        when(principal.getName()).thenReturn("john.doe@example.com");
+
         CreditCard mockCreditCard = new CreditCard();
+        mockCreditCard.setId(1L);
         when(creditCardService.addCreditCard(creditCardRequestDto, principal.getName())).thenReturn(mockCreditCard);
-        when(creditCardMapper.creditCardToCreditCardResponseDto(mockCreditCard)).thenReturn(creditCardResponseDto);
+
+        CreditCardResponseDto expectedResponse = CreditCardMapper.creditCardToCreditCardResponseDto(mockCreditCard);
 
         CreditCardResponseDto response = userController.saveCreditCard(creditCardRequestDto, principal);
         assertNotNull(response);
-        assertEquals(creditCardResponseDto, response);
+        assertEquals(expectedResponse, response);
         verify(creditCardService).addCreditCard(creditCardRequestDto, principal.getName());
-        verify(creditCardMapper).creditCardToCreditCardResponseDto(mockCreditCard);
     }
 }

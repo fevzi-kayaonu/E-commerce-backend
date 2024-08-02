@@ -15,7 +15,6 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -35,7 +34,7 @@ public class UserController {
     @PostMapping("/order")
     public OrderResponseDto saveOrder(@Valid @RequestBody OrderRequestDto orderRequestDto,
                                       Principal principal) {
-        String user_mail =  principal.getName();
+        String user_mail = principal.getName();
         Order order = orderService.addOrder(orderRequestDto, user_mail);
         return OrderMapper.orderToOrderResponseDto(order);
     }
@@ -44,8 +43,8 @@ public class UserController {
     @PostMapping("/address")
     public AddressResponseDto saveAddress(@Valid @RequestBody AddressRequestDto addressRequestDto,
                                           Principal principal) {//otantikeyt olmayı isteyen alanalra request atarken kullanıcı bilgileri elimize her seferinde nereden geliyor
-        String user_mail =  principal.getName();
-        Address address = addressService.addAddress(addressRequestDto,user_mail);
+        String user_mail = principal.getName();
+        Address address = addressService.addAddress(addressRequestDto, user_mail);
         return AddressMapper.addressToAddressResponseDto(address);
     }
 
@@ -53,7 +52,7 @@ public class UserController {
     @PostMapping("/credit-card")
     public CreditCardResponseDto saveCreditCard(@Valid @RequestBody CreditCardRequestDto creditCardRequestDto,
                                                 Principal principal) {
-        String user_mail =  principal.getName();
+        String user_mail = principal.getName();
         CreditCard creditCard = creditCardService.addCreditCard(creditCardRequestDto, user_mail);
         return CreditCardMapper.creditCardToCreditCardResponseDto(creditCard);
     }

@@ -24,5 +24,5 @@ public record CreditCardRequestDto(
         @Max(value = 9999, message = "CCV must be a 3 or 4-digit number")
         @NotNull(message = "CCV cannot be null")
         Integer ccv
-        ) {
+) {
 }

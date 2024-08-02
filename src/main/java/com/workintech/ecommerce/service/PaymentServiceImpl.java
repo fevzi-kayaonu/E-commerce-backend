@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class PaymentServiceImpl implements PaymentService{
+public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final CreditCardService creditCardService;
@@ -40,8 +40,6 @@ public class PaymentServiceImpl implements PaymentService{
         return paymentRepository.save(payment);
     }
 
-    //(dml)
-    // buna koymaya gerek var mıl
     @Override
     public Payment delete(Long id) {
         Payment payment = findById(id);
@@ -50,11 +48,10 @@ public class PaymentServiceImpl implements PaymentService{
     }
 
     @Override
-    public Payment addPayment(PaymentRequestDto paymentRequestDto){
+    public Payment addPayment(PaymentRequestDto paymentRequestDto) {
         Payment payment = PaymentMapper.paymentReqestDtoToPayment(paymentRequestDto);
         payment.setCreditCard(creditCardService.findById(paymentRequestDto.creditCardId()));
         return payment;
     }
-
 
 }

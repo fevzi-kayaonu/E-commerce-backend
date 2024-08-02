@@ -10,5 +10,4 @@ public record AddressResponseDto(Long id,
                                  String district,
                                  String city,
                                  String postalCode) {
-
 }

@@ -8,7 +8,7 @@ import com.workintech.ecommerce.entity.User;
 
 public class UserMapper {
 
-    public static User userRegisterRequestDtoToUser(UserRegisterRequestDto userRegisterRequestDto){
+    public static User userRegisterRequestDtoToUser(UserRegisterRequestDto userRegisterRequestDto) {
         User user = new User();
         user.setEmail(userRegisterRequestDto.email());
         user.setFirstName(userRegisterRequestDto.firstName());
@@ -17,14 +17,14 @@ public class UserMapper {
         return user;
     }
 
-    public static User userRequestDtoToUser(UserRequestDto userRequestDto){
-         User user = new User();
-         user.setEmail(userRequestDto.email());
-         return user;
+    public static User userRequestDtoToUser(UserRequestDto userRequestDto) {
+        User user = new User();
+        user.setEmail(userRequestDto.email());
+        return user;
     }
 
-    public static UserResponseDto userToUserResponseDto (User user) {
-        return new UserResponseDto(user.getFirstName(),user.getLastName(),user.getEmail()) ;
+    public static UserResponseDto userToUserResponseDto(User user) {
+        return new UserResponseDto(user.getFirstName(), user.getLastName(), user.getEmail());
     }
 
 

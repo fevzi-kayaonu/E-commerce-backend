@@ -15,32 +15,32 @@ import java.util.List;
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name= "id")
+    @Column(name = "id")
     private Long id;
 
-    @Column(nullable = false,name= "description")
+    @Column(nullable = false, name = "description")
     private String description;
 
-    @Column(nullable = false, length = 45,name= "street")
+    @Column(nullable = false, length = 45, name = "street")
     private String street;
 
-    @Column(nullable = false, length = 45,name= "neighborhood")
+    @Column(nullable = false, length = 45, name = "neighborhood")
     private String neighborhood;
 
-    @Column(nullable = false, length = 45,name= "district")
+    @Column(nullable = false, length = 45, name = "district")
     private String district;
 
-    @Column(nullable = false, length = 45,name= "city")
+    @Column(nullable = false, length = 45, name = "city")
     private String city;
 
-    @Column(nullable = false,name= "postal_code")
+    @Column(nullable = false, name = "postal_code")
     private String postalCode;
 
     @ManyToMany(mappedBy = "addresses", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<User> users = new ArrayList<>();
 
 
-    public void addUser(User user){
+    public void addUser(User user) {
 
         users.add(user);
         user.addAddress(this);

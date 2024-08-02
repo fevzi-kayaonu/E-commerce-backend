@@ -6,13 +6,13 @@ import com.workintech.ecommerce.entity.Image;
 
 public class ImageMapper {
 
-    public static Image imageRequestDtoToImage(ImageRequestDto imageRequestDto){
+    public static Image imageRequestDtoToImage(ImageRequestDto imageRequestDto) {
         Image image = new Image();
         image.setUrl(imageRequestDto.url());
         return image;
     }
 
-    public static ImageResponseDto imageToImageResponseDto(Image image){
+    public static ImageResponseDto imageToImageResponseDto(Image image) {
         return new ImageResponseDto(image.getId(), image.getUrl());
     }
 

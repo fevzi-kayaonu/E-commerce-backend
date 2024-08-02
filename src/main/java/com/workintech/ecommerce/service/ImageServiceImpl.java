@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ImageServiceImpl implements ImageService{
+public class ImageServiceImpl implements ImageService {
 
     private final ImageRepository imageRepository;
 
@@ -36,7 +36,7 @@ public class ImageServiceImpl implements ImageService{
 
     @Override
     public Image delete(Long id) {
-        Image image=findById(id);
+        Image image = findById(id);
         imageRepository.delete(image);
         return image;
     }

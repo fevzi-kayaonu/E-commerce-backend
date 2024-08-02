@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class AddressServiceImpl implements  AddressService{
+public class AddressServiceImpl implements AddressService {
 
     private final AddressRepository addressRepository;
     private final UserService userService;
@@ -35,12 +35,6 @@ public class AddressServiceImpl implements  AddressService{
 
     @Override
     public Address findById(Long id) {
-        /*
-        Optional<Address> address = addressRepository.findById(id);
-        if(address.isPresent()){
-            return address.get();
-        }
-        */
         return addressRepository.findById(id).orElseThrow(() -> new ErrorException("Address not found", HttpStatus.NOT_FOUND));
     }
 
@@ -60,10 +54,9 @@ public class AddressServiceImpl implements  AddressService{
     @Transactional
     @Override
     public Address addAddress(AddressRequestDto addressRequestDto, String user_mail) {
-       User user = userService.findByEmail(user_mail);
-            Address address = AddressMapper.addressRequestDtoToAddress(addressRequestDto);
-           // user.get().addAddress(address);
-            address.addUser(user);
-            return address;
+        User user = userService.findByEmail(user_mail);
+        Address address = AddressMapper.addressRequestDtoToAddress(addressRequestDto);
+        address.addUser(user);
+        return address;
     }
 }

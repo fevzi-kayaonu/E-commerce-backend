@@ -8,19 +8,12 @@ import java.util.List;
 
 public record OrderResponseDto(
         Long id,
-
         Instant date,
-
         Enum_OrderStatus status,
-
         AddressResponseDto addressResponseDto,
-
-        UserResponseDto userResponseDto,//Securitiden sonra güncellenecek
-
+        UserResponseDto userResponseDto,
         Double amount,
-
         List<ProductResponseDto> productResponseDtos,
-
         PaymentResponseDto paymentResponseDto
 ) {
 }

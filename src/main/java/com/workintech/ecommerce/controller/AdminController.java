@@ -39,7 +39,6 @@ public class AdminController {
         this.dataFetchService = dataFetchService;
     }
 
-    // Ürün ekleme
     @PostMapping("/products")
     @ResponseStatus(HttpStatus.CREATED)
     public ProductResponseDto createProduct(@Valid @RequestBody ProductRequestDto productRequestDto) {
@@ -47,14 +46,12 @@ public class AdminController {
         return ProductMapper.productToProductResponseDto(product);
     }
 
-    // Kullanıcı banlamak
     @PostMapping("/users/ban")
     public UserResponseDto banUser(@Valid @RequestBody UserBanRequestDto userBanRequestDto) {
 
         return UserMapper.userToUserResponseDto(userService.banUser(userBanRequestDto));
     }
 
-    // Category ekleme
     @PostMapping("/category")
     @ResponseStatus(HttpStatus.CREATED)
     public CategoryResponseDto createCategory(@Valid @RequestBody CategoryRequestDto categoryRequestDto) {
@@ -63,18 +60,19 @@ public class AdminController {
     }
 
     @DeleteMapping("/product/{id}")
-    public ProductResponseDto removeProduct(@PathVariable Long id){
-       Product product = productService.delete(id);
+    public ProductResponseDto removeProduct(@PathVariable Long id) {
+        Product product = productService.delete(id);
         return ProductMapper.productToProductResponseDto(product);
     }
 
-    @GetMapping("/fetchData")
+    @GetMapping("/download-data")
     public void fetchProducts() {
-           for (int i = 0 ; i<11 ; i++)
-             dataFetchService.createAndSaveProducts(i*50, 10);
+        for (int i = 0; i < 11; i++)
+            dataFetchService.createAndSaveProducts(i * 50, 10);
     }
+
     @GetMapping("/address")
-    List<AddressResponseDto> findAllProduct(){
+    List<AddressResponseDto> findAllProduct() {
         List<Address> addresses = addressService.findAll();
         return addresses.stream().map(AddressMapper::addressToAddressResponseDto).toList();
     }
